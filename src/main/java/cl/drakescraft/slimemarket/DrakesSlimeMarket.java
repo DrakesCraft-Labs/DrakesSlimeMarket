@@ -4,12 +4,14 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 public final class DrakesSlimeMarket extends JavaPlugin {
 
     private MarketCatalog catalog;
     private DynamicPricing pricing;
     private MarketAuditLogger auditLogger;
+    private BukkitTask refreshTask;
 
     @Override
     public void onEnable() {
@@ -37,13 +39,15 @@ public final class DrakesSlimeMarket extends JavaPlugin {
         command.setTabCompleter(menu);
         getServer().getPluginManager().registerEvents(menu, this);
 
-        final long refreshTicks = Math.max(60L, getConfig().getLong("pricing.refresh-seconds", 1800L)) * 20L;
-        getServer().getScheduler().runTaskTimer(this, this::refreshMarket, 40L, refreshTicks);
+        scheduleRefresh();
         getLogger().info("Mercado cargado; el catalogo se construira desde el registro real de Slimefun.");
     }
 
     @Override
     public void onDisable() {
+        if (refreshTask != null) {
+            refreshTask.cancel();
+        }
         if (auditLogger != null) {
             auditLogger.close();
         }
@@ -53,6 +57,7 @@ public final class DrakesSlimeMarket extends JavaPlugin {
     void reloadMarket() {
         reloadConfig();
         catalog.reloadPolicy();
+        scheduleRefresh();
         refreshMarket();
     }
 
@@ -65,5 +70,13 @@ public final class DrakesSlimeMarket extends JavaPlugin {
             getLogger().severe("No se pudo refrescar el mercado: " + exception.getMessage());
             exception.printStackTrace();
         }
+    }
+
+    private void scheduleRefresh() {
+        if (refreshTask != null) {
+            refreshTask.cancel();
+        }
+        final long refreshTicks = Math.max(60L, getConfig().getLong("pricing.refresh-seconds", 1800L)) * 20L;
+        refreshTask = getServer().getScheduler().runTaskTimer(this, this::refreshMarket, 40L, refreshTicks);
     }
 }
