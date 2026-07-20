@@ -1,0 +1,13 @@
+# Nada se vende por descubrimiento automático. Cada ID debe aprobarse aquí.
+catalog:
+  title: '&0Mercado de Materiales Slimefun'
+  entries: {}
+  # Ejemplo:
+  #   COPPER_INGOT:
+  #     price: 180
+  #     amount: 8
+
+# Defensa en profundidad: aun si se agrega un ID por error, estas familias no se venden.
+blocked-id-prefixes: [INFINITY, SUPREME]
+blocked-id-fragments: [SWORD, PICKAXE, AXE, SHOVEL, HOE, HELMET, CHESTPLATE, LEGGINGS, BOOTS, MACHINE, GENERATOR, REACTOR, ARMOR]
+purchase-cooldown-seconds: 2

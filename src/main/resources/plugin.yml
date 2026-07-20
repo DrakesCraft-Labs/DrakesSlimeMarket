@@ -1,0 +1,14 @@
+name: DrakesSlimeMarket
+version: ${project.version}
+main: cl.drakescraft.slimemarket.DrakesSlimeMarket
+api-version: '1.21'
+depend: [Slimefun, Vault]
+commands:
+  sfmercado:
+    description: Abre el mercado de materiales Slimefun.
+    permission: drakesslimemarket.use
+permissions:
+  drakesslimemarket.use:
+    default: true
+  drakesslimemarket.admin:
+    default: op
