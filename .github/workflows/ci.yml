@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: market-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Test y JAR
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Java 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Compilar y ejecutar pruebas
+        run: mvn -B -ntp clean verify
+
+      - name: Verificar artefacto
+        run: |
+          test -f target/DrakesSlimeMarket-1.0.0.jar
+          jar tf target/DrakesSlimeMarket-1.0.0.jar | grep -q '^cl/drakescraft/slimemarket/DrakesSlimeMarket.class$'
+          jar tf target/DrakesSlimeMarket-1.0.0.jar | grep -q '^plugin.yml$'
+
+      - name: Publicar JAR
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: DrakesSlimeMarket-1.0.0
+          path: target/DrakesSlimeMarket-1.0.0.jar
+          if-no-files-found: error

@@ -1,13 +1,84 @@
-# Nada se vende por descubrimiento automático. Cada ID debe aprobarse aquí.
 catalog:
-  title: '&0Mercado de Materiales Slimefun'
+  title: '&0Mercado Slimefun &8| &6%page%&8/&6%pages%'
+  auto-discovery: true
+  # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
   entries: {}
-  # Ejemplo:
-  #   COPPER_INGOT:
-  #     price: 180
-  #     amount: 8
+  # IDs excepcionales que no coincidan con las familias de materiales admitidas.
+  allowed-ids: []
+  allowed-id-fragments:
+    - DUST
+    - POWDER
+    - INGOT
+    - NUGGET
+    - PLATE
+    - ALLOY
+    - ORE
+    - GEM
+    - ESSENCE
+    - SHARD
+    - CRYSTAL
+    - SCRAP
+    - FIBER
+    - CLOTH
+    - RUBBER
+    - PLASTIC
+    - CARBON
+    - SILICON
+    - MAGNESIUM
+    - ALUMINUM
+    - ALUMINIUM
+    - LEAD
+    - TIN
+    - ZINC
+    - SILVER
+  blocked-addons: [InfinityExpansion, Supreme]
+  blocked-id-prefixes: [INFINITY, SUPREME]
+  blocked-id-fragments:
+    - CHEAT
+    - SWORD
+    - PICKAXE
+    - SHOVEL
+    - HOE
+    - HELMET
+    - CHESTPLATE
+    - LEGGINGS
+    - BOOTS
+    - ARMOR
+    - MACHINE
+    - GENERATOR
+    - REACTOR
+    - CAPACITOR
+    - STORAGE
+    - BACKPACK
+    - SPAWNER
+    - TALISMAN
+    - MULTITOOL
+  blocked-class-fragments: [Machine, Generator, Reactor, Weapon, Tool, Armor, Capacitor, Storage, Backpack]
 
-# Defensa en profundidad: aun si se agrega un ID por error, estas familias no se venden.
-blocked-id-prefixes: [INFINITY, SUPREME]
-blocked-id-fragments: [SWORD, PICKAXE, AXE, SHOVEL, HOE, HELMET, CHESTPLATE, LEGGINGS, BOOTS, MACHINE, GENERATOR, REACTOR, ARMOR]
+base-prices:
+  DUST: 25.0
+  POWDER: 30.0
+  NUGGET: 45.0
+  SCRAP: 55.0
+  ORE: 95.0
+  INGOT: 180.0
+  PLATE: 260.0
+  ALLOY: 340.0
+  GEM: 420.0
+  CRYSTAL: 480.0
+  ESSENCE: 520.0
+  SHARD: 560.0
+  DEFAULT: 220.0
+
+pricing:
+  refresh-seconds: 1800
+  reference-wealth: 100000000.0
+  minimum-factor: 0.85
+  maximum-factor: 1.85
+  demand-step: 0.02
+  maximum-demand-factor: 1.45
+  pulse-percent: 3.0
+
 purchase-cooldown-seconds: 2
+audit:
+  flush-seconds: 10

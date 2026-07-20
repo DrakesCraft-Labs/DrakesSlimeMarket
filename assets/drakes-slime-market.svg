@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">DrakesSlimeMarket</title>
+  <desc id="desc">Mercado Slimefun dinamico de DrakesCraft con templo griego, lingotes y grafico animado.</desc>
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#070b18"/>
+      <stop offset="1" stop-color="#101326"/>
+    </linearGradient>
+    <pattern id="meander" width="48" height="20" patternUnits="userSpaceOnUse">
+      <path d="M2 18V2h28v8H12v8h34V2" fill="none" stroke="#d8ad4d" stroke-width="3"/>
+    </pattern>
+    <filter id="cyanGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="320" fill="url(#night)"/>
+  <rect x="8" y="8" width="1184" height="304" rx="8" fill="none" stroke="#6e4a9e" stroke-width="2"/>
+  <rect x="16" y="16" width="1168" height="20" fill="url(#meander)" opacity=".95"/>
+  <rect x="16" y="284" width="1168" height="20" fill="url(#meander)" opacity=".95"/>
+
+  <g opacity=".32" stroke="#7c4cc4" fill="none">
+    <path d="M100 260V106m56 154V106m56 154V106M72 106h168L156 58Z" stroke-width="7"/>
+    <path d="M960 260V106m56 154V106m56 154V106m-140-154h168l-84-48Z" stroke-width="7"/>
+  </g>
+
+  <g transform="translate(68 130)">
+    <path d="M0 98h236l-18-68H18Z" fill="#15182d" stroke="#d8ad4d" stroke-width="4"/>
+    <path d="M18 30h200l-28-22H46Z" fill="#342057" stroke="#d8ad4d" stroke-width="4"/>
+    <rect x="34" y="43" width="42" height="42" rx="4" fill="#b8c4d8"/>
+    <rect x="96" y="43" width="42" height="42" rx="4" fill="#d8ad4d"/>
+    <path d="m178 39 23 23-23 23-23-23Z" fill="#27e1d2" filter="url(#cyanGlow)">
+      <animateTransform attributeName="transform" type="rotate" values="0 178 62;360 178 62" dur="8s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="178" cy="62" r="5" fill="#f5fbff"/>
+  </g>
+
+  <g transform="translate(302 72)">
+    <text x="0" y="76" fill="#f4f0ff" font-family="Georgia, 'Times New Roman', serif" font-size="60" font-weight="700">DRAKES SLIME MARKET</text>
+    <text x="4" y="116" fill="#d8ad4d" font-family="Arial, sans-serif" font-size="18">CATALOGO REAL · PRECIOS DINAMICOS · COMPRAS AUDITADAS</text>
+    <path d="M4 140h730" stroke="#6e4a9e" stroke-width="2"/>
+    <path d="M4 140h0" stroke="#27e1d2" stroke-width="3" filter="url(#cyanGlow)">
+      <animate attributeName="d" values="M4 140h0;M4 140h730;M734 140h0" dur="5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <g transform="translate(612 228)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 24 54 8l52 18 58-42 54 15 58-50 56 17 58-30" stroke="#27e1d2" stroke-width="5" filter="url(#cyanGlow)" stroke-dasharray="520" stroke-dashoffset="520">
+      <animate attributeName="stroke-dashoffset" values="520;0;0" dur="4.5s" repeatCount="indefinite"/>
+    </path>
+    <g fill="#d8ad4d" stroke="#f8d981" stroke-width="2" filter="url(#goldGlow)">
+      <circle cx="54" cy="8" r="5"><animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="164" cy="-16" r="5"><animate attributeName="r" values="4;8;4" dur="2s" begin=".5s" repeatCount="indefinite"/></circle>
+      <circle cx="276" cy="-51" r="5"><animate attributeName="r" values="4;8;4" dur="2s" begin="1s" repeatCount="indefinite"/></circle>
+      <circle cx="390" cy="-64" r="5"><animate attributeName="r" values="4;8;4" dur="2s" begin="1.5s" repeatCount="indefinite"/></circle>
+    </g>
+  </g>
+</svg>
