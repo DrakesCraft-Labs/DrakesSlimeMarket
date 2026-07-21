@@ -1,5 +1,5 @@
 catalog:
-  title: '&0Mercado SF &8| &b%category% &8· &6%page%&8/&6%pages%'
+  title: '&0Mercado Slimefun &8| &6%page%&8/&6%pages%'
   category-title: '&0Mercado Slimefun &8| &bMateriales'
   auto-discovery: true
   # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
@@ -34,7 +34,7 @@ catalog:
     - TIN
     - ZINC
     - SILVER
-  blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker]
+  blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker, AdvancedTech, AlchimiaVitae, BetterChests, DynaTech, ElementManipulation, FastMachines, FlowerPower, FluffyMachines, FNAmplifications, FoxyMachines, Galaxyfun, GeneticChickengineering, LiteXpansion, MobCapturer, PotionExpansion, RelicsOfCthonia, SensibleToolbox, SlimeFrame, SlimyTreeTaps, SoulJars, TranscEndence, VillagerUtil]
   blocked-id-prefixes: [INFINITY, SUPREME]
   blocked-id-fragments:
     - CHEAT
