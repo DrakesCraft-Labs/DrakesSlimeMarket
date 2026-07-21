@@ -1,10 +1,13 @@
 catalog:
-  title: '&0Mercado Slimefun &8| &6%page%&8/&6%pages%'
+  title: '&0Mercado SF &8| &b%category% &8· &6%page%&8/&6%pages%'
+  category-title: '&0Mercado Slimefun &8| &bMateriales'
   auto-discovery: true
   # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
-  entries: {}
   # IDs excepcionales que no coincidan con las familias de materiales admitidas.
   allowed-ids: []
+  # Solo estos addons se descubren automáticamente. Otros requieren una entrada
+  # explícita; evita convertir el mercado en un CheatSheet con precio.
+  allowed-addons: [Slimefun, ExoticGarden, Cultivation]
   allowed-id-fragments:
     - DUST
     - POWDER
@@ -31,7 +34,7 @@ catalog:
     - TIN
     - ZINC
     - SILVER
-  blocked-addons: [InfinityExpansion, Supreme]
+  blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker]
   blocked-id-prefixes: [INFINITY, SUPREME]
   blocked-id-fragments:
     - CHEAT
@@ -53,22 +56,64 @@ catalog:
     - SPAWNER
     - TALISMAN
     - MULTITOOL
-  blocked-class-fragments: [Machine, Generator, Reactor, Weapon, Tool, Armor, Capacitor, Storage, Backpack]
+    - CRAFTING
+    - TABLE
+    - CHEST
+    - TERMINAL
+    - PORTAL
+    - GPS
+    - TELEPORT
+    - ALTAR
+    - RUNE
+    - GUIDE
+    - COMPRESSOR
+    - ANDROID
+    - CARBONADO
+    - HARDENED
+    - REINFORCED
+    - BLISTERING
+  blocked-class-fragments: [Machine, Generator, Reactor, Weapon, Tool, Armor, Capacitor, Storage, Backpack, Chest, Table]
+  blocked-material-fragments: [CHEST, TABLE, FURNACE, DISPENSER, DROPPER, HOPPER, BARREL, SHULKER_BOX]
+  categories:
+    basicos:
+      slot: 20
+      material: REDSTONE
+      name: '&e&lMateriales básicos'
+      lore: ['&7Polvos, minerales, chatarra y recursos iniciales.', '&8Para recetas tempranas, no para saltarse progresión.']
+      id-fragments: [DUST, POWDER, NUGGET, ORE, SCRAP]
+    componentes:
+      slot: 22
+      material: IRON_INGOT
+      name: '&b&lComponentes'
+      lore: ['&7Lingotes, placas, aleaciones y piezas de receta.', '&8Los materiales de progreso medio cuestan más.']
+      id-fragments: [INGOT, PLATE, ALLOY, FIBER, CLOTH, RUBBER, PLASTIC, CARBON, SILICON, MAGNESIUM, ALUMINUM, ALUMINIUM, LEAD, TIN, ZINC, SILVER]
+    raros:
+      slot: 24
+      material: AMETHYST_SHARD
+      name: '&d&lRecursos raros'
+      lore: ['&7Gemas, esencias, cristales y fragmentos.', '&8No incluye endgame, máquinas ni equipo.']
+      id-fragments: [GEM, ESSENCE, SHARD, CRYSTAL]
+  entries:
+    STEEL_INGOT: {base-price: 850.0}
+    DURALUMIN_INGOT: {base-price: 1200.0}
+    BILLON_INGOT: {base-price: 1500.0}
+    SOLDER_INGOT: {base-price: 900.0}
+    DAMASCUS_STEEL_INGOT: {base-price: 2500.0}
 
 base-prices:
-  DUST: 25.0
-  POWDER: 30.0
-  NUGGET: 45.0
-  SCRAP: 55.0
-  ORE: 95.0
-  INGOT: 180.0
-  PLATE: 260.0
-  ALLOY: 340.0
-  GEM: 420.0
-  CRYSTAL: 480.0
-  ESSENCE: 520.0
-  SHARD: 560.0
-  DEFAULT: 220.0
+  DUST: 45.0
+  POWDER: 60.0
+  NUGGET: 90.0
+  SCRAP: 120.0
+  ORE: 180.0
+  INGOT: 480.0
+  PLATE: 720.0
+  ALLOY: 1050.0
+  GEM: 1500.0
+  CRYSTAL: 1800.0
+  ESSENCE: 2200.0
+  SHARD: 2400.0
+  DEFAULT: 800.0
 
 pricing:
   refresh-seconds: 1800

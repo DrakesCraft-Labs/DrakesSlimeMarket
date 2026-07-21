@@ -90,7 +90,7 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
         if (catalog.entries().isEmpty()) {
             plugin.refreshMarket();
         }
-        open(player, 0);
+        openCategories(player);
         return true;
     }
 
@@ -104,16 +104,37 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
         return List.of();
     }
 
-    /** Abre una sesion aislada: los slots de un jugador nunca se comparten con otro menu. */
-    private void open(Player player, int requestedPage) {
-        final List<CatalogEntry> allEntries = catalog.entries();
+    /** Shows curated material families before showing individual offers. */
+    private void openCategories(Player player) {
+        final CategoryInventory holder = new CategoryInventory(color(plugin.getConfig().getString("catalog.category-title", "&0Mercado Slimefun")));
+        for (MarketCategory category : catalog.categories()) {
+            final List<CatalogEntry> entries = catalog.entriesForCategory(category);
+            if (category.slot() < 0 || category.slot() >= holder.inventory.getSize() || entries.isEmpty()) {
+                continue;
+            }
+            final Material material = Material.matchMaterial(category.material());
+            final List<String> lore = new ArrayList<>(category.lore().stream().map(MarketMenu::color).toList());
+            lore.add("");
+            lore.add(ChatColor.GRAY + "Materiales disponibles: " + ChatColor.WHITE + entries.size());
+            lore.add(ChatColor.YELLOW + "Clic para abrir");
+            holder.inventory.setItem(category.slot(), named(material == null ? Material.CHEST : material, color(category.name()), lore));
+            holder.categories.put(category.slot(), category);
+        }
+        holder.inventory.setItem(49, named(Material.BARRIER, ChatColor.RED + "Cerrar", List.of()));
+        player.openInventory(holder.inventory);
+    }
+
+    /** Opens one isolated category page; players never share the backing inventory. */
+    private void open(Player player, MarketCategory category, int requestedPage) {
+        final List<CatalogEntry> allEntries = catalog.entriesForCategory(category);
         final int pageCount = Math.max(1, (int) Math.ceil(allEntries.size() / (double) PAGE_SIZE));
         final int page = Math.max(0, Math.min(requestedPage, pageCount - 1));
         final String configuredTitle = plugin.getConfig().getString("catalog.title", "&0Mercado Slimefun");
         final String title = color(configuredTitle
+            .replace("%category%", ChatColor.stripColor(color(category.name())))
             .replace("%page%", Integer.toString(page + 1))
             .replace("%pages%", Integer.toString(pageCount)));
-        final MarketInventory holder = new MarketInventory(title, page, pageCount);
+        final MarketInventory holder = new MarketInventory(title, category, page, pageCount);
         final Inventory inventory = holder.getInventory();
 
         final int from = page * PAGE_SIZE;
@@ -136,11 +157,23 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
         if (page + 1 < pageCount) {
             inventory.setItem(NEXT_SLOT, named(Material.ARROW, ChatColor.GOLD + "Pagina siguiente", List.of()));
         }
+        inventory.setItem(48, named(Material.CHEST, ChatColor.YELLOW + "Categorias", List.of(ChatColor.GRAY + "Volver al indice.")));
         player.openInventory(inventory);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
+        if (event.getInventory().getHolder() instanceof CategoryInventory categories) {
+            event.setCancelled(true);
+            if (!(event.getWhoClicked() instanceof Player player) || event.getRawSlot() < 0) {
+                return;
+            }
+            final MarketCategory category = categories.categories.get(event.getRawSlot());
+            if (category != null) {
+                open(player, category, 0);
+            }
+            return;
+        }
         if (!(event.getInventory().getHolder() instanceof MarketInventory holder)) {
             return;
         }
@@ -149,11 +182,15 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
             return;
         }
         if (event.getRawSlot() == PREVIOUS_SLOT && holder.page > 0) {
-            open(player, holder.page - 1);
+            open(player, holder.category, holder.page - 1);
             return;
         }
         if (event.getRawSlot() == NEXT_SLOT && holder.page + 1 < holder.pageCount) {
-            open(player, holder.page + 1);
+            open(player, holder.category, holder.page + 1);
+            return;
+        }
+        if (event.getRawSlot() == 48) {
+            openCategories(player);
             return;
         }
 
@@ -301,13 +338,29 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
 
     private static final class MarketInventory implements InventoryHolder {
         private final Inventory inventory;
+        private final MarketCategory category;
         private final int page;
         private final int pageCount;
         private final Map<Integer, String> offers = new HashMap<>();
 
-        private MarketInventory(String title, int page, int pageCount) {
+        private MarketInventory(String title, MarketCategory category, int page, int pageCount) {
+            this.category = category;
             this.page = page;
             this.pageCount = pageCount;
+            this.inventory = Bukkit.createInventory(this, 54, title);
+        }
+
+        @Override
+        public Inventory getInventory() {
+            return inventory;
+        }
+    }
+
+    private static final class CategoryInventory implements InventoryHolder {
+        private final Inventory inventory;
+        private final Map<Integer, MarketCategory> categories = new HashMap<>();
+
+        private CategoryInventory(String title) {
             this.inventory = Bukkit.createInventory(this, 54, title);
         }
 

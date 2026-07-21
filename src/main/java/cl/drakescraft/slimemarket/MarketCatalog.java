@@ -78,6 +78,37 @@ final class MarketCatalog {
         return entries;
     }
 
+    /** Returns a curated slice of the catalog for one player-facing category. */
+    List<CatalogEntry> entriesForCategory(MarketCategory category) {
+        return entries.stream()
+            .filter(entry -> category.matches(entry.id()))
+            .toList();
+    }
+
+    List<MarketCategory> categories() {
+        final ConfigurationSection section = plugin.getConfig().getConfigurationSection("catalog.categories");
+        if (section == null) {
+            return List.of();
+        }
+
+        final List<MarketCategory> categories = new ArrayList<>();
+        for (String id : section.getKeys(false)) {
+            final ConfigurationSection category = section.getConfigurationSection(id);
+            if (category == null) {
+                continue;
+            }
+            categories.add(new MarketCategory(
+                id,
+                category.getInt("slot", -1),
+                category.getString("material", "CHEST"),
+                category.getString("name", id),
+                category.getStringList("lore"),
+                category.getStringList("id-fragments")
+            ));
+        }
+        return categories;
+    }
+
     Optional<CatalogEntry> find(String id) {
         return Optional.ofNullable(entriesById.get(id));
     }
