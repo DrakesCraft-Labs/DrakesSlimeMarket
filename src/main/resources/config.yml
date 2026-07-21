@@ -93,12 +93,54 @@ catalog:
       name: '&d&lRecursos raros'
       lore: ['&7Gemas, esencias, cristales y fragmentos.', '&8No incluye endgame, máquinas ni equipo.']
       id-fragments: [GEM, ESSENCE, SHARD, CRYSTAL]
+    bloques:
+      slot: 28
+      material: STONE_BRICKS
+      name: '&f&lConstrucción vanilla'
+      lore: ['&7Bloques base para construir en stacks.', '&8Lista curada: sin contenedores ni estaciones.']
+      id-fragments: [VANILLA_BLOQUES_]
+    decoracion:
+      slot: 30
+      material: WHITE_CONCRETE
+      name: '&d&lDecoración vanilla'
+      lore: ['&7Vidrio, terracota y detalles de construcción.', '&8Nada de almacenamiento o utilidades.']
+      id-fragments: [VANILLA_DECORACION_]
+    maderas:
+      slot: 32
+      material: OAK_LOG
+      name: '&6&lMaderas vanilla'
+      lore: ['&7Troncos, tablas y bloques de madera.', '&8Para builders, no para automatización.']
+      id-fragments: [VANILLA_MADERAS_]
+    novedades_121:
+      slot: 34
+      material: TUFF_BRICKS
+      name: '&a&lBloques 1.21'
+      lore: ['&7Tuff, cobre decorativo y pale oak.', '&8Curado para construcción.']
+      id-fragments: [VANILLA_121_]
   entries:
     STEEL_INGOT: {base-price: 850.0}
     DURALUMIN_INGOT: {base-price: 1200.0}
     BILLON_INGOT: {base-price: 1500.0}
     SOLDER_INGOT: {base-price: 900.0}
     DAMASCUS_STEEL_INGOT: {base-price: 2500.0}
+
+# Catálogo vanilla configurable. Sólo se agregan materiales declarados aquí:
+# nunca se descubre todo Bukkit para evitar páginas infinitas o ítems de utilidad.
+vanilla-catalog:
+  enabled: true
+  categories:
+    bloques:
+      base-price: 0.45
+      materials: [DIRT, COBBLESTONE, STONE, SAND, GRAVEL, ANDESITE, DIORITE, GRANITE, DEEPSLATE, COBBLED_DEEPSLATE, STONE_BRICKS, BRICKS, CALCITE, MOSS_BLOCK, QUARTZ_BLOCK, SMOOTH_QUARTZ]
+    decoracion:
+      base-price: 0.75
+      materials: [GLASS, WHITE_STAINED_GLASS, TERRACOTTA, WHITE_TERRACOTTA, GLOWSTONE, SEA_LANTERN, AMETHYST_BLOCK, CHISELED_STONE_BRICKS, POLISHED_DEEPSLATE, SMOOTH_BASALT]
+    maderas:
+      base-price: 0.50
+      materials: [OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG, MANGROVE_LOG, CHERRY_LOG, OAK_PLANKS, SPRUCE_PLANKS, BIRCH_PLANKS, JUNGLE_PLANKS, ACACIA_PLANKS, DARK_OAK_PLANKS, MANGROVE_PLANKS, CHERRY_PLANKS]
+    '121':
+      base-price: 0.70
+      materials: [TUFF, POLISHED_TUFF, TUFF_BRICKS, CHISELED_TUFF, CUT_COPPER, CHISELED_COPPER, COPPER_GRATE, PALE_OAK_LOG, PALE_OAK_PLANKS]
 
 base-prices:
   DUST: 45.0

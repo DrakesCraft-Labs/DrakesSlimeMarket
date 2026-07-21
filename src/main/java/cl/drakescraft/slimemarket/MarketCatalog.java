@@ -3,6 +3,7 @@ package cl.drakescraft.slimemarket;
 import com.github.drakescraft_labs.slimefun4.api.items.SlimefunItem;
 import com.github.drakescraft_labs.slimefun4.implementation.Slimefun;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -63,6 +64,8 @@ final class MarketCatalog {
             discovered.put(id, new CatalogEntry(id, addon, displayName, prototype.clone(), basePrice));
             countsByAddon.merge(addon, 1, Integer::sum);
         }
+
+        addVanillaEntries(discovered, countsByAddon);
 
         final List<CatalogEntry> sorted = new ArrayList<>(discovered.values());
         sorted.sort(Comparator.comparing(CatalogEntry::addon, String.CASE_INSENSITIVE_ORDER)
@@ -140,5 +143,51 @@ final class MarketCatalog {
             return Math.max(0.01D, prices.getDouble("DEFAULT", 220.0D));
         }
         return 220.0D;
+    }
+
+    /** Adds only the explicit vanilla building whitelist; the marketplace never enumerates all materials. */
+    private void addVanillaEntries(Map<String, CatalogEntry> discovered, Map<String, Integer> countsByAddon) {
+        final ConfigurationSection vanilla = plugin.getConfig().getConfigurationSection("vanilla-catalog");
+        if (vanilla == null || !vanilla.getBoolean("enabled", false)) {
+            return;
+        }
+
+        final ConfigurationSection categories = vanilla.getConfigurationSection("categories");
+        if (categories == null) {
+            return;
+        }
+
+        for (String categoryId : categories.getKeys(false)) {
+            final ConfigurationSection category = categories.getConfigurationSection(categoryId);
+            if (category == null) {
+                continue;
+            }
+
+            final double basePrice = Math.max(0.01D, category.getDouble("base-price", 1.0D));
+            for (String materialName : category.getStringList("materials")) {
+                final Material material = Material.matchMaterial(materialName);
+                if (material == null || !material.isItem() || material.isAir()) {
+                    plugin.getLogger().warning("Material vanilla invalido ignorado: " + materialName);
+                    continue;
+                }
+
+                final String id = "VANILLA_" + categoryId.toUpperCase(Locale.ROOT) + "_" + material.name();
+                final String displayName = prettyMaterialName(material);
+                discovered.put(id, new CatalogEntry(id, "Vanilla", displayName, new ItemStack(material), basePrice));
+                countsByAddon.merge("Vanilla", 1, Integer::sum);
+            }
+        }
+    }
+
+    private static String prettyMaterialName(Material material) {
+        final String[] words = material.name().toLowerCase(Locale.ROOT).split("_");
+        final StringBuilder name = new StringBuilder();
+        for (String word : words) {
+            if (!name.isEmpty()) {
+                name.append(' ');
+            }
+            name.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+        }
+        return name.toString();
     }
 }
