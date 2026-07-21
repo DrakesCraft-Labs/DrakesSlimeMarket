@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Set;
 
 final class MaterialPolicy {
+    private static final List<String> DEFAULT_ALLOWED_ADDONS = List.of("Slimefun", "ExoticGarden", "Cultivation");
     private final Set<String> allowedIds;
     private final List<String> allowedFragments;
     private final Set<String> allowedAddons;
@@ -42,7 +43,8 @@ final class MaterialPolicy {
     ) {
         this.allowedIds = new HashSet<>(normalize(allowedIds));
         this.allowedFragments = normalize(allowedFragments);
-        this.allowedAddons = new HashSet<>(normalize(allowedAddons));
+        final List<String> configuredAddons = allowedAddons.isEmpty() ? DEFAULT_ALLOWED_ADDONS : allowedAddons;
+        this.allowedAddons = new HashSet<>(normalize(configuredAddons));
         this.blockedAddons = normalize(blockedAddons);
         this.blockedPrefixes = normalize(blockedPrefixes);
         this.blockedFragments = normalize(blockedFragments);
@@ -85,7 +87,7 @@ final class MaterialPolicy {
     }
 
     private boolean isAllowedAddon(String addon) {
-        return allowedAddons.isEmpty() || allowedAddons.contains(addon);
+        return allowedAddons.contains(addon);
     }
 
     private static boolean containsAny(String value, List<String> candidates) {

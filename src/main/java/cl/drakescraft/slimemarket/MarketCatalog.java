@@ -88,7 +88,7 @@ final class MarketCatalog {
     List<MarketCategory> categories() {
         final ConfigurationSection section = plugin.getConfig().getConfigurationSection("catalog.categories");
         if (section == null) {
-            return List.of();
+            return defaultCategories();
         }
 
         final List<MarketCategory> categories = new ArrayList<>();
@@ -106,7 +106,22 @@ final class MarketCatalog {
                 category.getStringList("id-fragments")
             ));
         }
-        return categories;
+        return categories.isEmpty() ? defaultCategories() : categories;
+    }
+
+    /** Mantiene el mercado seguro y navegable incluso al arrancar con una configuración previa. */
+    private static List<MarketCategory> defaultCategories() {
+        return List.of(
+            new MarketCategory("basicos", 20, "REDSTONE", "&aMateriales básicos",
+                List.of("&7Polvos, minerales y restos.", "&8Compra: &f%count% materiales"),
+                List.of("DUST", "POWDER", "NUGGET", "ORE", "SCRAP")),
+            new MarketCategory("componentes", 22, "IRON_INGOT", "&eComponentes",
+                List.of("&7Lingotes y piezas intermedias.", "&8Compra: &f%count% materiales"),
+                List.of("INGOT", "PLATE", "ALLOY", "FIBER", "CLOTH", "RUBBER", "PLASTIC", "CARBON", "SILICON", "MAGNESIUM", "ALUMINUM", "ALUMINIUM", "LEAD", "TIN", "ZINC", "SILVER")),
+            new MarketCategory("raros", 24, "AMETHYST_SHARD", "&dMateriales raros",
+                List.of("&7Gemas y componentes escasos.", "&8Compra: &f%count% materiales"),
+                List.of("GEM", "ESSENCE", "SHARD", "CRYSTAL"))
+        );
     }
 
     Optional<CatalogEntry> find(String id) {
