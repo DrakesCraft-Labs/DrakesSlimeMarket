@@ -34,6 +34,20 @@ catalog:
     - TIN
     - ZINC
     - SILVER
+    - COPPER
+    - GOLD
+    - IRON
+    - DIAMOND
+    - EMERALD
+    - QUARTZ
+    - REDSTONE
+    - LAPIS
+    - COAL
+    - SULFUR
+    - SALT
+    - SIFTED
+    - SYNTHETIC
+    - RAW
   blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker, AdvancedTech, AlchimiaVitae, BetterChests, DynaTech, ElementManipulation, FastMachines, FlowerPower, FluffyMachines, FNAmplifications, FoxyMachines, Galaxyfun, GeneticChickengineering, LiteXpansion, MobCapturer, PotionExpansion, RelicsOfCthonia, SensibleToolbox, SlimeFrame, SlimyTreeTaps, SoulJars, TranscEndence, VillagerUtil]
   blocked-id-prefixes: [INFINITY, SUPREME]
   blocked-id-fragments:
@@ -56,6 +70,21 @@ catalog:
     - SPAWNER
     - TALISMAN
     - MULTITOOL
+    - SINGULARITY
+    - QUANTUM
+    - CELESTIAL
+    - COSMIC
+    - DIMENSIONAL
+    - STELLAR
+    - NUCLEAR
+    - URANIUM
+    - NEPTUNIUM
+    - PLUTONIUM
+    - JETPACK
+    - CIRCUIT
+    - MOTOR
+    - CORE
+    - HEAVY
     - CRAFTING
     - TABLE
     - CHEST
