@@ -5,9 +5,9 @@ catalog:
   # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
   # IDs excepcionales que no coincidan con las familias de materiales admitidas.
   allowed-ids: []
-  # Solo estos addons se descubren automáticamente. Otros requieren una entrada
-  # explícita; evita convertir el mercado en un CheatSheet con precio.
-  allowed-addons: [Slimefun, ExoticGarden, Cultivation]
+  # Todos los addons cargados se inspeccionan, pero solo se publican familias de
+  # materiales que superan cada denegación de seguridad inferior.
+  allowed-addons: ['*']
   allowed-id-fragments:
     - DUST
     - POWDER
@@ -34,21 +34,12 @@ catalog:
     - TIN
     - ZINC
     - SILVER
-    - COPPER
-    - GOLD
-    - IRON
-    - DIAMOND
-    - EMERALD
-    - QUARTZ
-    - REDSTONE
-    - LAPIS
-    - COAL
     - SULFUR
     - SALT
     - SIFTED
-    - SYNTHETIC
-    - RAW
-  blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker, AdvancedTech, AlchimiaVitae, BetterChests, DynaTech, ElementManipulation, FastMachines, FlowerPower, FluffyMachines, FNAmplifications, FoxyMachines, Galaxyfun, GeneticChickengineering, LiteXpansion, MobCapturer, PotionExpansion, RelicsOfCthonia, SensibleToolbox, SlimeFrame, SlimyTreeTaps, SoulJars, TranscEndence, VillagerUtil]
+  # Addons cuya finalidad completa es endgame, almacenamiento, equipo o captura.
+  # Los demás se inspeccionan ítem por ítem y no quedan autorizados en bloque.
+  blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker, BetterChests, MobCapturer, RelicsOfCthonia, SensibleToolbox, SlimeFrame, SoulJars, TranscEndence]
   blocked-id-prefixes: [INFINITY, SUPREME]
   blocked-id-fragments:
     - CHEAT
@@ -80,6 +71,19 @@ catalog:
     - URANIUM
     - NEPTUNIUM
     - PLUTONIUM
+    - THORIUM
+    - LITHIUM
+    - TITANIUM
+    - IRIDIUM
+    - OSMIUM
+    - VOID
+    - INFINITE
+    - ULTIMATE
+    - DIVINE
+    - DEMONIC
+    - DRAGON
+    - WITHER
+    - ANCIENT
     - JETPACK
     - CIRCUIT
     - MOTOR

@@ -41,4 +41,36 @@ class MaterialPolicyTest {
         assertFalse(policy.isAllowed("ENDER_INGOT", "ColoredEnderChests", "SlimefunItem", "IRON_INGOT", false));
         assertFalse(policy.isAllowed("BASIC_INGOT", "Slimefun", "SlimefunItem", "ENDER_CHEST", false));
     }
+
+    @Test
+    void wildcardInspectsEveryAddonWithoutBypassingRiskRules() {
+        MaterialPolicy universal = new MaterialPolicy(
+            List.of(),
+            List.of("DUST", "INGOT", "PLATE"),
+            List.of("*"),
+            List.of("InfinityExpansion", "Supreme", "Networks"),
+            List.of("INFINITY", "SUPREME"),
+            List.of("MACHINE", "GENERATOR", "STORAGE"),
+            List.of("Machine", "Generator", "Storage"),
+            List.of("CHEST", "TABLE")
+        );
+
+        assertTrue(universal.isAllowed("STAINLESS_STEEL_INGOT", "DynaTech", "SlimefunItem", "IRON_INGOT", false));
+        assertTrue(universal.isAllowed("MOON_DUST", "Galactifun2", "SlimefunItem", "GLOWSTONE_DUST", false));
+        assertFalse(universal.isAllowed("SUPREME_INGOT", "Supreme", "SlimefunItem", "NETHERITE_INGOT", false));
+        assertFalse(universal.isAllowed("NETWORK_STORAGE_INGOT", "NetworksV6-Drake", "StorageItem", "IRON_INGOT", false));
+    }
+
+    @Test
+    void highTierNamesRemainExcludedFromUniversalDiscovery() {
+        MaterialPolicy universal = new MaterialPolicy(
+            List.of(), List.of("DUST", "INGOT", "PLATE"), List.of("*"), List.of(), List.of(),
+            List.of("TITANIUM", "IRIDIUM", "VOID", "INFINITE", "ULTIMATE", "DRAGON"),
+            List.of("Machine", "Generator"), List.of("CHEST", "TABLE")
+        );
+
+        assertFalse(universal.isAllowed("TITANIUM_INGOT", "FoxyMachines", "SlimefunItem", "IRON_INGOT", false));
+        assertFalse(universal.isAllowed("VOID_DUST", "Galaxyfun", "SlimefunItem", "GLOWSTONE_DUST", false));
+        assertTrue(universal.isAllowed("ZINC_DUST", "DynaTech", "SlimefunItem", "GUNPOWDER", false));
+    }
 }

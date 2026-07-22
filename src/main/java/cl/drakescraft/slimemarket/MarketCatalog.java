@@ -37,6 +37,7 @@ final class MarketCatalog {
         final boolean autoDiscovery = plugin.getConfig().getBoolean("catalog.auto-discovery", true);
         final Map<String, CatalogEntry> discovered = new LinkedHashMap<>();
         final Map<String, Integer> countsByAddon = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        final Map<String, Integer> inspectedByAddon = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         for (SlimefunItem slimefunItem : Slimefun.getRegistry().getEnabledSlimefunItems()) {
             final String id = slimefunItem.getId();
@@ -53,6 +54,7 @@ final class MarketCatalog {
             if (prototype == null || slimefunItem.isHidden() || slimefunItem.isDisabled()) {
                 continue;
             }
+            inspectedByAddon.merge(addon, 1, Integer::sum);
             if (!policy.isAllowed(id, addon, slimefunItem.getClass().getSimpleName(), prototype.getType().name(), explicit)) {
                 continue;
             }
@@ -73,8 +75,9 @@ final class MarketCatalog {
             .thenComparing(CatalogEntry::id));
         entries = List.copyOf(sorted);
         entriesById = Map.copyOf(discovered);
-        plugin.getLogger().info("Catalogo actualizado: " + entries.size() + " materiales de "
-            + countsByAddon.size() + " addons " + countsByAddon + ".");
+        plugin.getLogger().info("Catalogo actualizado: " + entries.size() + " materiales seguros; "
+            + countsByAddon.size() + " de " + inspectedByAddon.size() + " addons detectados publican ofertas "
+            + countsByAddon + ".");
     }
 
     List<CatalogEntry> entries() {

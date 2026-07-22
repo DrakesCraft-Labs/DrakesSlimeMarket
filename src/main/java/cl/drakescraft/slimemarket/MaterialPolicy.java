@@ -87,7 +87,7 @@ final class MaterialPolicy {
     }
 
     private boolean isAllowedAddon(String addon) {
-        return allowedAddons.contains(addon);
+        return allowedAddons.contains("*") || allowedAddons.contains(addon);
     }
 
     private static boolean containsAny(String value, List<String> candidates) {
