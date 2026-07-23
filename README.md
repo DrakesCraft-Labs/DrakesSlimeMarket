@@ -1,6 +1,6 @@
 <div align="center">
 
-![DrakesSlimeMarket Banner](./slimemarket_banner.svg)
+  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/DrakesSlimeMarket/main/slimemarket_banner.svg" alt="DrakesSlimeMarket Banner" width="920" />
 
 # 🏪 DrakesSlimeMarket (Tienda DrakesCraft)
 
