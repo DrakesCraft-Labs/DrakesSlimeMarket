@@ -4,7 +4,7 @@ catalog:
   auto-discovery: true
   # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
   # IDs excepcionales que no coincidan con las familias de materiales admitidas.
-  allowed-ids: []
+  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE]
   # Todos los addons cargados se inspeccionan, pero solo se publican familias de
   # materiales que superan cada denegación de seguridad inferior.
   allowed-addons: ['*']
@@ -151,6 +151,17 @@ catalog:
       lore: ['&7Tuff, cobre decorativo y pale oak.', '&8Curado para construcción.']
       id-fragments: [VANILLA_121_]
   entries:
+    IRON_DUST: {base-price: 45.0}
+    GOLD_DUST: {base-price: 60.0}
+    COPPER_DUST: {base-price: 45.0}
+    TIN_DUST: {base-price: 50.0}
+    SILVER_DUST: {base-price: 75.0}
+    LEAD_DUST: {base-price: 70.0}
+    ALUMINUM_DUST: {base-price: 65.0}
+    ALUMINIUM_DUST: {base-price: 65.0}
+    ZINC_DUST: {base-price: 65.0}
+    MAGNESIUM_DUST: {base-price: 80.0}
+    SIFTED_ORE: {base-price: 35.0}
     STEEL_INGOT: {base-price: 850.0}
     DURALUMIN_INGOT: {base-price: 1200.0}
     BILLON_INGOT: {base-price: 1500.0}
