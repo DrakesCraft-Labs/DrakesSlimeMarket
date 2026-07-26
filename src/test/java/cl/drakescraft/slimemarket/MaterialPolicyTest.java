@@ -26,7 +26,7 @@ class MaterialPolicyTest {
     }
 
     @Test
-    void blockedAddonWinsEvenForExplicitEntry() {
+    void hardRestrictionsWinOverExplicitEntry() {
         assertFalse(policy.isAllowed("VOID_INGOT", "InfinityExpansion", "SlimefunItem", "IRON_INGOT", true));
     }
 
@@ -59,6 +59,17 @@ class MaterialPolicyTest {
         assertTrue(universal.isAllowed("MOON_DUST", "Galactifun2", "SlimefunItem", "GLOWSTONE_DUST", false));
         assertFalse(universal.isAllowed("SUPREME_INGOT", "Supreme", "SlimefunItem", "NETHERITE_INGOT", false));
         assertFalse(universal.isAllowed("NETWORK_STORAGE_INGOT", "NetworksV6-Drake", "StorageItem", "IRON_INGOT", false));
+    }
+
+    @Test
+    void exactBasicNetworkComponentsCanBypassOnlyTheAddonWideBlock() {
+        MaterialPolicy networkPolicy = new MaterialPolicy(
+            List.of("NTW_OPTIC_CABLE"), List.of(), List.of("*"), List.of("NetworksV6-Drake"), List.of(),
+            List.of("MACHINE", "GENERATOR", "STORAGE"), List.of("Machine", "Generator", "Storage"), List.of("CHEST", "TABLE")
+        );
+
+        assertTrue(networkPolicy.isAllowed("NTW_OPTIC_CABLE", "NetworksV6-Drake", "SlimefunItem", "STRING", false));
+        assertFalse(networkPolicy.isAllowed("NTW_QUANTUM_STORAGE_1", "NetworksV6-Drake", "StorageItem", "IRON_INGOT", true));
     }
 
     @Test

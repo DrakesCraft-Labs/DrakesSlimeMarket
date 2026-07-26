@@ -59,8 +59,7 @@ final class MaterialPolicy {
         final String normalizedClass = normalize(className);
         final String normalizedMaterial = normalize(materialName);
 
-        if (containsAny(normalizedAddon, blockedAddons)
-            || startsWithAny(normalizedId, blockedPrefixes)
+        if (startsWithAny(normalizedId, blockedPrefixes)
             || containsAny(normalizedId, blockedFragments)
             || containsAny(normalizedClass, blockedClasses)
             || containsAny(normalizedMaterial, blockedMaterials)
@@ -68,9 +67,19 @@ final class MaterialPolicy {
             return false;
         }
 
+        // A named basic component may opt out of an addon-wide block, but never
+        // out of the hard item, class, material or equipment restrictions above.
+        if (allowedIds.contains(normalizedId)) {
+            return true;
+        }
+
+        if (containsAny(normalizedAddon, blockedAddons)) {
+            return false;
+        }
+
         return explicitlyConfigured
             || (isAllowedAddon(normalizedAddon)
-            && (allowedIds.contains(normalizedId) || containsAny(normalizedId, allowedFragments)));
+            && containsAny(normalizedId, allowedFragments));
     }
 
     private static boolean isEquipmentMaterial(String material) {

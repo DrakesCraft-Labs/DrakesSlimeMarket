@@ -4,7 +4,7 @@ catalog:
   auto-discovery: true
   # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
   # IDs excepcionales que no coincidan con las familias de materiales admitidas.
-  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE]
+  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER]
   # Todos los addons cargados se inspeccionan, pero solo se publican familias de
   # materiales que superan cada denegación de seguridad inferior.
   allowed-addons: ['*']
@@ -150,6 +150,12 @@ catalog:
       name: '&a&lBloques 1.21'
       lore: ['&7Tuff, cobre decorativo y pale oak.', '&8Curado para construcción.']
       id-fragments: [VANILLA_121_]
+    redes_basicas:
+      slot: 38
+      material: STRING
+      name: '&9&lNetworks básicas'
+      lore: ['&7Componentes iniciales para redes.', '&8Sin controladores, storage ni automatización avanzada.']
+      id-fragments: [NTW_]
   entries:
     IRON_DUST: {base-price: 45.0}
     GOLD_DUST: {base-price: 60.0}
@@ -167,6 +173,11 @@ catalog:
     BILLON_INGOT: {base-price: 1500.0}
     SOLDER_INGOT: {base-price: 900.0}
     DAMASCUS_STEEL_INGOT: {base-price: 2500.0}
+    NTW_SYNTHETIC_EMERALD_SHARD: {base-price: 180.0}
+    NTW_OPTIC_GLASS: {base-price: 240.0}
+    NTW_OPTIC_CABLE: {base-price: 320.0}
+    NTW_GRABBER: {base-price: 5500.0}
+    NTW_PUSHER: {base-price: 5500.0}
 
 # Catálogo vanilla configurable. Sólo se agregan materiales declarados aquí:
 # nunca se descubre todo Bukkit para evitar páginas infinitas o ítems de utilidad.
