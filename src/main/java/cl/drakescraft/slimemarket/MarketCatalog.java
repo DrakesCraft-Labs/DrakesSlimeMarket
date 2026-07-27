@@ -21,6 +21,7 @@ final class MarketCatalog {
     private volatile List<CatalogEntry> entries = List.of();
     private volatile Map<String, CatalogEntry> entriesById = Map.of();
     private MaterialPolicy policy;
+    private RecipeComplexityPolicy recipeSafety;
 
     MarketCatalog(DrakesSlimeMarket plugin) {
         this.plugin = plugin;
@@ -29,6 +30,7 @@ final class MarketCatalog {
 
     void reloadPolicy() {
         policy = new MaterialPolicy(plugin.getConfig());
+        recipeSafety = new RecipeComplexityPolicy(plugin.getConfig());
     }
 
     /** Reconstruye el catalogo desde los items habilitados por Slimefun y cada addon ya cargado. */
@@ -38,6 +40,7 @@ final class MarketCatalog {
         final Map<String, CatalogEntry> discovered = new LinkedHashMap<>();
         final Map<String, Integer> countsByAddon = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         final Map<String, Integer> inspectedByAddon = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        int recipeRejected = 0;
 
         for (SlimefunItem slimefunItem : Slimefun.getRegistry().getEnabledSlimefunItems()) {
             final String id = slimefunItem.getId();
@@ -56,6 +59,10 @@ final class MarketCatalog {
             }
             inspectedByAddon.merge(addon, 1, Integer::sum);
             if (!policy.isAllowed(id, addon, slimefunItem.getClass().getSimpleName(), prototype.getType().name(), explicit)) {
+                continue;
+            }
+            if (!recipeSafety.isAllowed(slimefunItem)) {
+                recipeRejected++;
                 continue;
             }
 
@@ -77,7 +84,7 @@ final class MarketCatalog {
         entriesById = Map.copyOf(discovered);
         plugin.getLogger().info("Catalogo actualizado: " + entries.size() + " materiales seguros; "
             + countsByAddon.size() + " de " + inspectedByAddon.size() + " addons detectados publican ofertas "
-            + countsByAddon + ".");
+            + countsByAddon + "; " + recipeRejected + " recetas profundas bloqueadas.");
     }
 
     List<CatalogEntry> entries() {

@@ -2,6 +2,11 @@ catalog:
   title: '&0Mercado Slimefun &8| &6%page%&8/&6%pages%'
   category-title: '&0Mercado Slimefun &8| &bMateriales'
   auto-discovery: true
+  # Una familia de material no entra si su receta directa ya exige una cadena Slimefun profunda.
+  recipe-safety:
+    enabled: true
+    maximum-input-slots: 9
+    maximum-slimefun-inputs: 2
   # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
   # IDs excepcionales que no coincidan con las familias de materiales admitidas.
   allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER]
