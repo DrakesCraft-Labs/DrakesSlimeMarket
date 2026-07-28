@@ -10,10 +10,10 @@ catalog:
     enabled: true
     maximum-input-slots: 9
     maximum-slimefun-inputs: 2
-    exceptions: [NTW_GRABBER, NTW_PUSHER]
-  # Explicit only for basic network ingredients. Automation blocks never bypass hard denials.
-  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER]
-  machine-exceptions: [NTW_GRABBER, NTW_PUSHER]
+    exceptions: [NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
+  # Exact first-tier Networks nodes. They still pass hard item/material safety gates.
+  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
+  machine-exceptions: [NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
   # Every loaded addon is inspected. It must pass the hard item and material gates; named machine exceptions are audited separately.
   allowed-addons: ['*']
   allowed-id-fragments: [DUST, POWDER, INGOT, NUGGET, PLATE, ALLOY, ORE, GEM, ESSENCE, SHARD, CRYSTAL, SCRAP, FIBER, CLOTH, RUBBER, PLASTIC, CARBON, SILICON, MAGNESIUM, ALUMINUM, ALUMINIUM, LEAD, TIN, ZINC, SILVER, SULFUR, SALT, RAW, CHUNK, PIECE, ROD, WIRE, GEAR, BOLT, SPRING, RESIN, CLAY, LEATHER, STRING, SEED, PULP, JUICE, BERRY, FRUIT, VEGETABLE, HERB, FLOWER, DYE, SHELL, SCALE, FEATHER, BONE, PEARL, SLIME, GOO, GEL, ASH, FLAKE]
@@ -46,8 +46,8 @@ catalog:
       slot: 41
       material: OBSERVER
       name: '&6&lAutomatización controlada'
-      lore: ['&7Dos bloques básicos de Networks.', '&cMuy caros: no reemplazan progresión.']
-      id-fragments: [NTW_GRABBER, NTW_PUSHER]
+      lore: ['&7Seis nodos útiles de Networks para logística inicial.', '&cMuy caros: no reemplazan progresión ni storage.']
+      id-fragments: [NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
     organicos:
       slot: 25
       material: WHEAT
@@ -95,6 +95,10 @@ catalog:
     NTW_OPTIC_CABLE: {base-price: 320.0}
     NTW_GRABBER: {base-price: 25000.0}
     NTW_PUSHER: {base-price: 25000.0}
+    NTW_VANILLA_GRABBER: {base-price: 25000.0}
+    NTW_VANILLA_PUSHER: {base-price: 25000.0}
+    NTW_VACUUM: {base-price: 45000.0}
+    NTW_TRASH: {base-price: 30000.0}
 
 vanilla-catalog:
   enabled: true
