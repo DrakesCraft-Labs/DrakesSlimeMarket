@@ -73,6 +73,17 @@ class MaterialPolicyTest {
     }
 
     @Test
+    void allowsOnlyNamedMachineExceptions() {
+        MaterialPolicy exceptions = new MaterialPolicy(
+            List.of("NTW_GRABBER", "NTW_PUSHER"), List.of("NTW_GRABBER", "NTW_PUSHER"), List.of(), List.of("*"),
+            List.of("NetworksV6-Drake"), List.of(), List.of("MACHINE", "GENERATOR"), List.of("Machine", "Generator"), List.of("CHEST", "TABLE")
+        );
+
+        assertTrue(exceptions.isAllowed("NTW_GRABBER", "NetworksV6-Drake", "Machine", "OBSERVER", false));
+        assertFalse(exceptions.isAllowed("NTW_OTHER_MACHINE", "NetworksV6-Drake", "Machine", "OBSERVER", true));
+    }
+
+    @Test
     void highTierNamesRemainExcludedFromUniversalDiscovery() {
         MaterialPolicy universal = new MaterialPolicy(
             List.of(), List.of("DUST", "INGOT", "PLATE"), List.of("*"), List.of(), List.of(),

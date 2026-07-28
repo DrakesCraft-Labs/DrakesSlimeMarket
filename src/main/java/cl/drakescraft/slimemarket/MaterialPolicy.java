@@ -10,6 +10,7 @@ import java.util.Set;
 final class MaterialPolicy {
     private static final List<String> DEFAULT_ALLOWED_ADDONS = List.of("Slimefun", "ExoticGarden", "Cultivation");
     private final Set<String> allowedIds;
+    private final Set<String> machineExceptions;
     private final List<String> allowedFragments;
     private final Set<String> allowedAddons;
     private final List<String> blockedAddons;
@@ -21,6 +22,7 @@ final class MaterialPolicy {
     MaterialPolicy(FileConfiguration config) {
         this(
             config.getStringList("catalog.allowed-ids"),
+            config.getStringList("catalog.machine-exceptions"),
             config.getStringList("catalog.allowed-id-fragments"),
             config.getStringList("catalog.allowed-addons"),
             config.getStringList("catalog.blocked-addons"),
@@ -33,6 +35,7 @@ final class MaterialPolicy {
 
     MaterialPolicy(
         List<String> allowedIds,
+        List<String> machineExceptions,
         List<String> allowedFragments,
         List<String> allowedAddons,
         List<String> blockedAddons,
@@ -42,6 +45,7 @@ final class MaterialPolicy {
         List<String> blockedMaterials
     ) {
         this.allowedIds = new HashSet<>(normalize(allowedIds));
+        this.machineExceptions = new HashSet<>(normalize(machineExceptions));
         this.allowedFragments = normalize(allowedFragments);
         final List<String> configuredAddons = allowedAddons.isEmpty() ? DEFAULT_ALLOWED_ADDONS : allowedAddons;
         this.allowedAddons = new HashSet<>(normalize(configuredAddons));
@@ -50,6 +54,19 @@ final class MaterialPolicy {
         this.blockedFragments = normalize(blockedFragments);
         this.blockedClasses = normalize(blockedClasses);
         this.blockedMaterials = normalize(blockedMaterials);
+    }
+
+    MaterialPolicy(
+        List<String> allowedIds,
+        List<String> allowedFragments,
+        List<String> allowedAddons,
+        List<String> blockedAddons,
+        List<String> blockedPrefixes,
+        List<String> blockedFragments,
+        List<String> blockedClasses,
+        List<String> blockedMaterials
+    ) {
+        this(allowedIds, List.of(), allowedFragments, allowedAddons, blockedAddons, blockedPrefixes, blockedFragments, blockedClasses, blockedMaterials);
     }
 
     /** Aplica denegaciones antes de cualquier lista permitida para que un override no venda equipo peligroso. */
@@ -61,9 +78,11 @@ final class MaterialPolicy {
 
         if (startsWithAny(normalizedId, blockedPrefixes)
             || containsAny(normalizedId, blockedFragments)
-            || containsAny(normalizedClass, blockedClasses)
             || containsAny(normalizedMaterial, blockedMaterials)
             || isEquipmentMaterial(normalizedMaterial)) {
+            return false;
+        }
+        if (containsAny(normalizedClass, blockedClasses) && !machineExceptions.contains(normalizedId)) {
             return false;
         }
 

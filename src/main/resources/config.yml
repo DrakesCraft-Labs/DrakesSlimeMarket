@@ -10,9 +10,11 @@ catalog:
     enabled: true
     maximum-input-slots: 9
     maximum-slimefun-inputs: 2
+    exceptions: [NTW_GRABBER, NTW_PUSHER]
   # Explicit only for basic network ingredients. Automation blocks never bypass hard denials.
-  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE]
-  # Every loaded addon is inspected. It must still pass the material, class and recipe gates below.
+  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER]
+  machine-exceptions: [NTW_GRABBER, NTW_PUSHER]
+  # Every loaded addon is inspected. It must pass the hard item and material gates; named machine exceptions are audited separately.
   allowed-addons: ['*']
   allowed-id-fragments: [DUST, POWDER, INGOT, NUGGET, PLATE, ALLOY, ORE, GEM, ESSENCE, SHARD, CRYSTAL, SCRAP, FIBER, CLOTH, RUBBER, PLASTIC, CARBON, SILICON, MAGNESIUM, ALUMINUM, ALUMINIUM, LEAD, TIN, ZINC, SILVER, SULFUR, SALT, RAW, CHUNK, PIECE, ROD, WIRE, GEAR, BOLT, SPRING, RESIN, CLAY, LEATHER, STRING, SEED, PULP, JUICE, BERRY, FRUIT, VEGETABLE, HERB, FLOWER, DYE, SHELL, SCALE, FEATHER, BONE, PEARL, SLIME, GOO, GEL, ASH, FLAKE]
   # Whole endgame, storage and capture addons remain outside the market.
@@ -40,6 +42,12 @@ catalog:
       name: '&d&lRecursos raros'
       lore: ['&7Gemas, esencias, cristales y fragmentos.', '&8No incluye endgame, máquinas ni equipo.']
       id-fragments: [GEM, ESSENCE, SHARD, CRYSTAL, PEARL, SHELL, SCALE]
+    automatizacion_controlada:
+      slot: 41
+      material: OBSERVER
+      name: '&6&lAutomatización controlada'
+      lore: ['&7Dos bloques básicos de Networks.', '&cMuy caros: no reemplazan progresión.']
+      id-fragments: [NTW_GRABBER, NTW_PUSHER]
     organicos:
       slot: 25
       material: WHEAT
@@ -85,6 +93,8 @@ catalog:
     NTW_SYNTHETIC_EMERALD_SHARD: {base-price: 180.0}
     NTW_OPTIC_GLASS: {base-price: 240.0}
     NTW_OPTIC_CABLE: {base-price: 320.0}
+    NTW_GRABBER: {base-price: 25000.0}
+    NTW_PUSHER: {base-price: 25000.0}
 
 vanilla-catalog:
   enabled: true
