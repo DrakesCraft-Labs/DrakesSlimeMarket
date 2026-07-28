@@ -22,6 +22,7 @@ final class MarketCatalog {
     private volatile Map<String, CatalogEntry> entriesById = Map.of();
     private MaterialPolicy policy;
     private RecipeComplexityPolicy recipeSafety;
+    private CatalogRotation rotation;
 
     MarketCatalog(DrakesSlimeMarket plugin) {
         this.plugin = plugin;
@@ -31,6 +32,7 @@ final class MarketCatalog {
     void reloadPolicy() {
         policy = new MaterialPolicy(plugin.getConfig());
         recipeSafety = new RecipeComplexityPolicy(plugin.getConfig());
+        rotation = new CatalogRotation(plugin.getConfig());
     }
 
     /** Reconstruye el catalogo desde los items habilitados por Slimefun y cada addon ya cargado. */
@@ -93,9 +95,10 @@ final class MarketCatalog {
 
     /** Returns a curated slice of the catalog for one player-facing category. */
     List<CatalogEntry> entriesForCategory(MarketCategory category) {
-        return entries.stream()
+        List<CatalogEntry> candidates = entries.stream()
             .filter(entry -> category.matches(entry.id()))
             .toList();
+        return rotation.select(category.id(), candidates);
     }
 
     List<MarketCategory> categories() {

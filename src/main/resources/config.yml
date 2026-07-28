@@ -2,177 +2,81 @@ catalog:
   title: '&0Mercado Slimefun &8| &6%page%&8/&6%pages%'
   category-title: '&0Mercado Slimefun &8| &bMateriales'
   auto-discovery: true
-  # Una familia de material no entra si su receta directa ya exige una cadena Slimefun profunda.
+  rotation:
+    enabled: true
+    refresh-seconds: 1800
+    offers-per-category: 36
   recipe-safety:
     enabled: true
     maximum-input-slots: 9
     maximum-slimefun-inputs: 2
-  # Overrides por ID real. enabled: false siempre gana; base-price fuerza el precio unitario.
-  # IDs excepcionales que no coincidan con las familias de materiales admitidas.
-  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER]
-  # Todos los addons cargados se inspeccionan, pero solo se publican familias de
-  # materiales que superan cada denegación de seguridad inferior.
+  # Explicit only for basic network ingredients. Automation blocks never bypass hard denials.
+  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE]
+  # Every loaded addon is inspected. It must still pass the material, class and recipe gates below.
   allowed-addons: ['*']
-  allowed-id-fragments:
-    - DUST
-    - POWDER
-    - INGOT
-    - NUGGET
-    - PLATE
-    - ALLOY
-    - ORE
-    - GEM
-    - ESSENCE
-    - SHARD
-    - CRYSTAL
-    - SCRAP
-    - FIBER
-    - CLOTH
-    - RUBBER
-    - PLASTIC
-    - CARBON
-    - SILICON
-    - MAGNESIUM
-    - ALUMINUM
-    - ALUMINIUM
-    - LEAD
-    - TIN
-    - ZINC
-    - SILVER
-    - SULFUR
-    - SALT
-    - SIFTED
-  # Addons cuya finalidad completa es endgame, almacenamiento, equipo o captura.
-  # Los demás se inspeccionan ítem por ítem y no quedan autorizados en bloque.
+  allowed-id-fragments: [DUST, POWDER, INGOT, NUGGET, PLATE, ALLOY, ORE, GEM, ESSENCE, SHARD, CRYSTAL, SCRAP, FIBER, CLOTH, RUBBER, PLASTIC, CARBON, SILICON, MAGNESIUM, ALUMINUM, ALUMINIUM, LEAD, TIN, ZINC, SILVER, SULFUR, SALT, RAW, CHUNK, PIECE, ROD, WIRE, GEAR, BOLT, SPRING, RESIN, CLAY, LEATHER, STRING, SEED, PULP, JUICE, BERRY, FRUIT, VEGETABLE, HERB, FLOWER, DYE, SHELL, SCALE, FEATHER, BONE, PEARL, SLIME, GOO, GEL, ASH, FLAKE]
+  # Whole endgame, storage and capture addons remain outside the market.
   blocked-addons: [InfinityExpansion, Supreme, ColoredEnderChests, NetworksV6-Drake, SlimeTinker, BetterChests, MobCapturer, RelicsOfCthonia, SensibleToolbox, SlimeFrame, SoulJars, TranscEndence]
   blocked-id-prefixes: [INFINITY, SUPREME]
-  blocked-id-fragments:
-    - CHEAT
-    - SWORD
-    - PICKAXE
-    - SHOVEL
-    - HOE
-    - HELMET
-    - CHESTPLATE
-    - LEGGINGS
-    - BOOTS
-    - ARMOR
-    - MACHINE
-    - GENERATOR
-    - REACTOR
-    - CAPACITOR
-    - STORAGE
-    - BACKPACK
-    - SPAWNER
-    - TALISMAN
-    - MULTITOOL
-    - SINGULARITY
-    - QUANTUM
-    - CELESTIAL
-    - COSMIC
-    - DIMENSIONAL
-    - STELLAR
-    - NUCLEAR
-    - URANIUM
-    - NEPTUNIUM
-    - PLUTONIUM
-    - THORIUM
-    - LITHIUM
-    - TITANIUM
-    - IRIDIUM
-    - OSMIUM
-    - VOID
-    - INFINITE
-    - ULTIMATE
-    - DIVINE
-    - DEMONIC
-    - DRAGON
-    - WITHER
-    - ANCIENT
-    - JETPACK
-    - CIRCUIT
-    - MOTOR
-    - CORE
-    - HEAVY
-    - CRAFTING
-    - TABLE
-    - CHEST
-    - TERMINAL
-    - PORTAL
-    - GPS
-    - TELEPORT
-    - ALTAR
-    - RUNE
-    - GUIDE
-    - COMPRESSOR
-    - ANDROID
-    - CARBONADO
-    - HARDENED
-    - REINFORCED
-    - BLISTERING
+  blocked-id-fragments: [CHEAT, SWORD, PICKAXE, SHOVEL, HOE, HELMET, CHESTPLATE, LEGGINGS, BOOTS, ARMOR, MACHINE, GENERATOR, REACTOR, CAPACITOR, STORAGE, BACKPACK, SPAWNER, TALISMAN, MULTITOOL, SINGULARITY, QUANTUM, CELESTIAL, COSMIC, DIMENSIONAL, STELLAR, NUCLEAR, URANIUM, NEPTUNIUM, PLUTONIUM, THORIUM, LITHIUM, TITANIUM, IRIDIUM, OSMIUM, VOID, INFINITE, ULTIMATE, DIVINE, DEMONIC, DRAGON, WITHER, ANCIENT, JETPACK, CIRCUIT, MOTOR, CORE, CRAFTING, TABLE, CHEST, TERMINAL, PORTAL, GPS, TELEPORT, ALTAR, RUNE, GUIDE, COMPRESSOR, ANDROID, CARBONADO, HARDENED, REINFORCED, BLISTERING, BATTERY, ENERGY, POWER, ELECTRIC]
   blocked-class-fragments: [Machine, Generator, Reactor, Weapon, Tool, Armor, Capacitor, Storage, Backpack, Chest, Table]
   blocked-material-fragments: [CHEST, TABLE, FURNACE, DISPENSER, DROPPER, HOPPER, BARREL, SHULKER_BOX]
   categories:
     basicos:
-      slot: 20
+      slot: 19
       material: REDSTONE
       name: '&e&lMateriales básicos'
-      lore: ['&7Polvos, minerales, chatarra y recursos iniciales.', '&8Para recetas tempranas, no para saltarse progresión.']
-      id-fragments: [DUST, POWDER, NUGGET, ORE, SCRAP]
+      lore: ['&7Polvos, minerales, chatarra y recursos iniciales.', '&8La selección rota cada 30 minutos.']
+      id-fragments: [DUST, POWDER, NUGGET, ORE, SCRAP, RAW, CHUNK, PIECE, ASH, FLAKE, SLIME, GOO, GEL]
     componentes:
-      slot: 22
+      slot: 21
       material: IRON_INGOT
       name: '&b&lComponentes'
-      lore: ['&7Lingotes, placas, aleaciones y piezas de receta.', '&8Los materiales de progreso medio cuestan más.']
-      id-fragments: [INGOT, PLATE, ALLOY, FIBER, CLOTH, RUBBER, PLASTIC, CARBON, SILICON, MAGNESIUM, ALUMINUM, ALUMINIUM, LEAD, TIN, ZINC, SILVER]
+      lore: ['&7Lingotes, placas, aleaciones y piezas de receta.', '&8Sin máquinas, energía ni automatización.']
+      id-fragments: [INGOT, PLATE, ALLOY, FIBER, CLOTH, RUBBER, PLASTIC, CARBON, SILICON, MAGNESIUM, ALUMINUM, ALUMINIUM, LEAD, TIN, ZINC, SILVER, ROD, WIRE, GEAR, BOLT, SPRING]
     raros:
-      slot: 24
+      slot: 23
       material: AMETHYST_SHARD
       name: '&d&lRecursos raros'
       lore: ['&7Gemas, esencias, cristales y fragmentos.', '&8No incluye endgame, máquinas ni equipo.']
-      id-fragments: [GEM, ESSENCE, SHARD, CRYSTAL]
+      id-fragments: [GEM, ESSENCE, SHARD, CRYSTAL, PEARL, SHELL, SCALE]
+    organicos:
+      slot: 25
+      material: WHEAT
+      name: '&a&lOrgánicos y cultivo'
+      lore: ['&7Semillas, fibras, resinas y cosechas de addons.', '&8Una vía cómoda, sin vender comida terminada.']
+      id-fragments: [SEED, PULP, JUICE, BERRY, FRUIT, VEGETABLE, HERB, FLOWER, RESIN, DYE, LEATHER, STRING, BONE, FEATHER]
+    recursos_vanilla:
+      slot: 29
+      material: COAL
+      name: '&f&lRecursos vanilla'
+      lore: ['&7Minerales, piedra y recursos base en stacks.', '&8Sin utilidades, estaciones ni contenedores.']
+      id-fragments: [VANILLA_RECURSOS_]
     bloques:
-      slot: 28
+      slot: 31
       material: STONE_BRICKS
-      name: '&f&lConstrucción vanilla'
-      lore: ['&7Bloques base para construir en stacks.', '&8Lista curada: sin contenedores ni estaciones.']
+      name: '&7&lConstrucción vanilla'
+      lore: ['&7Bloques base para construir en stacks.', '&8Lista curada para builders.']
       id-fragments: [VANILLA_BLOQUES_]
     decoracion:
-      slot: 30
+      slot: 33
       material: WHITE_CONCRETE
       name: '&d&lDecoración vanilla'
-      lore: ['&7Vidrio, terracota y detalles de construcción.', '&8Nada de almacenamiento o utilidades.']
+      lore: ['&7Vidrio, terracota y detalles de construcción.', '&8Sin almacenamiento o utilidades.']
       id-fragments: [VANILLA_DECORACION_]
     maderas:
-      slot: 32
+      slot: 37
       material: OAK_LOG
       name: '&6&lMaderas vanilla'
-      lore: ['&7Troncos, tablas y bloques de madera.', '&8Para builders, no para automatización.']
+      lore: ['&7Troncos, tablas y bloques de madera.', '&8Para construir, no para automatización.']
       id-fragments: [VANILLA_MADERAS_]
     novedades_121:
-      slot: 34
+      slot: 39
       material: TUFF_BRICKS
       name: '&a&lBloques 1.21'
       lore: ['&7Tuff, cobre decorativo y pale oak.', '&8Curado para construcción.']
       id-fragments: [VANILLA_121_]
-    redes_basicas:
-      slot: 38
-      material: STRING
-      name: '&9&lNetworks básicas'
-      lore: ['&7Componentes iniciales para redes.', '&8Sin controladores, storage ni automatización avanzada.']
-      id-fragments: [NTW_]
   entries:
-    IRON_DUST: {base-price: 45.0}
-    GOLD_DUST: {base-price: 60.0}
-    COPPER_DUST: {base-price: 45.0}
-    TIN_DUST: {base-price: 50.0}
-    SILVER_DUST: {base-price: 75.0}
-    LEAD_DUST: {base-price: 70.0}
-    ALUMINUM_DUST: {base-price: 65.0}
-    ALUMINIUM_DUST: {base-price: 65.0}
-    ZINC_DUST: {base-price: 65.0}
-    MAGNESIUM_DUST: {base-price: 80.0}
-    SIFTED_ORE: {base-price: 35.0}
     STEEL_INGOT: {base-price: 850.0}
     DURALUMIN_INGOT: {base-price: 1200.0}
     BILLON_INGOT: {base-price: 1500.0}
@@ -181,20 +85,19 @@ catalog:
     NTW_SYNTHETIC_EMERALD_SHARD: {base-price: 180.0}
     NTW_OPTIC_GLASS: {base-price: 240.0}
     NTW_OPTIC_CABLE: {base-price: 320.0}
-    NTW_GRABBER: {base-price: 5500.0}
-    NTW_PUSHER: {base-price: 5500.0}
 
-# Catálogo vanilla configurable. Sólo se agregan materiales declarados aquí:
-# nunca se descubre todo Bukkit para evitar páginas infinitas o ítems de utilidad.
 vanilla-catalog:
   enabled: true
   categories:
+    recursos:
+      base-price: 4.0
+      materials: [COAL, CHARCOAL, RAW_IRON, RAW_GOLD, RAW_COPPER, IRON_INGOT, GOLD_INGOT, COPPER_INGOT, REDSTONE, LAPIS_LAZULI, QUARTZ, AMETHYST_SHARD, CLAY_BALL, FLINT, BONE, STRING, LEATHER, FEATHER, SLIME_BALL, HONEYCOMB, GUNPOWDER]
     bloques:
       base-price: 0.45
-      materials: [DIRT, COBBLESTONE, STONE, SAND, GRAVEL, ANDESITE, DIORITE, GRANITE, DEEPSLATE, COBBLED_DEEPSLATE, STONE_BRICKS, BRICKS, CALCITE, MOSS_BLOCK, QUARTZ_BLOCK, SMOOTH_QUARTZ]
+      materials: [DIRT, COBBLESTONE, STONE, SAND, GRAVEL, ANDESITE, DIORITE, GRANITE, DEEPSLATE, COBBLED_DEEPSLATE, STONE_BRICKS, BRICKS, CALCITE, MOSS_BLOCK, QUARTZ_BLOCK, SMOOTH_QUARTZ, NETHERRACK, SOUL_SAND, END_STONE]
     decoracion:
       base-price: 0.75
-      materials: [GLASS, WHITE_STAINED_GLASS, TERRACOTTA, WHITE_TERRACOTTA, GLOWSTONE, SEA_LANTERN, AMETHYST_BLOCK, CHISELED_STONE_BRICKS, POLISHED_DEEPSLATE, SMOOTH_BASALT]
+      materials: [GLASS, WHITE_STAINED_GLASS, TERRACOTTA, WHITE_TERRACOTTA, GLOWSTONE, SEA_LANTERN, AMETHYST_BLOCK, CHISELED_STONE_BRICKS, POLISHED_DEEPSLATE, SMOOTH_BASALT, WHITE_CONCRETE, BLACK_CONCRETE, PURPLE_CONCRETE, MAGENTA_CONCRETE]
     maderas:
       base-price: 0.50
       materials: [OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG, MANGROVE_LOG, CHERRY_LOG, OAK_PLANKS, SPRUCE_PLANKS, BIRCH_PLANKS, JUNGLE_PLANKS, ACACIA_PLANKS, DARK_OAK_PLANKS, MANGROVE_PLANKS, CHERRY_PLANKS]
@@ -207,14 +110,22 @@ base-prices:
   POWDER: 60.0
   NUGGET: 90.0
   SCRAP: 120.0
+  RAW: 140.0
+  CHUNK: 150.0
+  PIECE: 170.0
   ORE: 180.0
   INGOT: 480.0
   PLATE: 720.0
   ALLOY: 1050.0
+  ROD: 380.0
+  WIRE: 460.0
+  GEAR: 600.0
   GEM: 1500.0
   CRYSTAL: 1800.0
   ESSENCE: 2200.0
   SHARD: 2400.0
+  SEED: 95.0
+  RESIN: 220.0
   DEFAULT: 800.0
 
 pricing:
