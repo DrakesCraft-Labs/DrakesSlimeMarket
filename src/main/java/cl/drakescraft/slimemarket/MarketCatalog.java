@@ -9,11 +9,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 
 final class MarketCatalog {
@@ -42,10 +45,14 @@ final class MarketCatalog {
         final Map<String, CatalogEntry> discovered = new LinkedHashMap<>();
         final Map<String, Integer> countsByAddon = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         final Map<String, Integer> inspectedByAddon = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        final Set<String> configuredMachines = configuredMachineExceptions();
+        final Map<String, String> machineStatus = new HashMap<>();
         int recipeRejected = 0;
 
         for (SlimefunItem slimefunItem : Slimefun.getRegistry().getEnabledSlimefunItems()) {
             final String id = slimefunItem.getId();
+            final String normalizedId = id.toUpperCase(Locale.ROOT);
+            final boolean namedMachine = configuredMachines.contains(normalizedId);
             final boolean explicit = overrides != null && overrides.isConfigurationSection(id);
             if (!autoDiscovery && !explicit) {
                 continue;
@@ -56,15 +63,35 @@ final class MarketCatalog {
 
             final ItemStack prototype = slimefunItem.getItem();
             final String addon = slimefunItem.getAddon() == null ? "Slimefun" : slimefunItem.getAddon().getName();
-            if (prototype == null || slimefunItem.isHidden() || slimefunItem.isDisabled()) {
+            if (prototype == null) {
+                if (namedMachine) {
+                    machineStatus.put(normalizedId, "sin item prototipo");
+                }
+                continue;
+            }
+            if (slimefunItem.isDisabled()) {
+                if (namedMachine) {
+                    machineStatus.put(normalizedId, "deshabilitado por Slimefun");
+                }
+                continue;
+            }
+            // Explicitly audited first-tier nodes may be hidden from the guide,
+            // but they remain functional and should not disappear from the market.
+            if (slimefunItem.isHidden() && !namedMachine) {
                 continue;
             }
             inspectedByAddon.merge(addon, 1, Integer::sum);
             if (!policy.isAllowed(id, addon, slimefunItem.getClass().getSimpleName(), prototype.getType().name(), explicit)) {
+                if (namedMachine) {
+                    machineStatus.put(normalizedId, "rechazado por politica de material");
+                }
                 continue;
             }
             if (!recipeSafety.isAllowed(slimefunItem)) {
                 recipeRejected++;
+                if (namedMachine) {
+                    machineStatus.put(normalizedId, "rechazado por complejidad de receta");
+                }
                 continue;
             }
 
@@ -74,7 +101,12 @@ final class MarketCatalog {
             final String displayName = rawName == null || rawName.isBlank() ? id : rawName;
             discovered.put(id, new CatalogEntry(id, addon, displayName, prototype.clone(), basePrice));
             countsByAddon.merge(addon, 1, Integer::sum);
+            if (namedMachine) {
+                machineStatus.put(normalizedId, "publicado");
+            }
         }
+
+        configuredMachines.forEach(id -> machineStatus.putIfAbsent(id, "no registrado por Networks"));
 
         addVanillaEntries(discovered, countsByAddon);
 
@@ -87,6 +119,9 @@ final class MarketCatalog {
         plugin.getLogger().info("Catalogo actualizado: " + entries.size() + " materiales seguros; "
             + countsByAddon.size() + " de " + inspectedByAddon.size() + " addons detectados publican ofertas "
             + countsByAddon + "; " + recipeRejected + " recetas profundas bloqueadas.");
+        if (!configuredMachines.isEmpty()) {
+            plugin.getLogger().info("Automatizacion controlada: " + new TreeMap<>(machineStatus));
+        }
     }
 
     List<CatalogEntry> entries() {
@@ -156,6 +191,16 @@ final class MarketCatalog {
             return Math.max(0.01D, prices.getDouble("DEFAULT", 220.0D));
         }
         return 220.0D;
+    }
+
+    private Set<String> configuredMachineExceptions() {
+        final Set<String> ids = new HashSet<>();
+        for (String id : plugin.getConfig().getStringList("catalog.machine-exceptions")) {
+            if (id != null && !id.isBlank()) {
+                ids.add(id.toUpperCase(Locale.ROOT));
+            }
+        }
+        return ids;
     }
 
     /** Adds only the explicit vanilla building whitelist; the marketplace never enumerates all materials. */
