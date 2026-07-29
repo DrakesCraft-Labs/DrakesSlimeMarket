@@ -22,6 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Obtener Slimefun Core
+        uses: actions/checkout@v6
+        with:
+          repository: DrakesCraft-Labs/Slimefun4-Drake
+          path: .ci/slimefun-core
+
       - name: Java 21
         uses: actions/setup-java@v5
         with:
@@ -29,19 +35,22 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Instalar Slimefun Core
+        run: mvn -B -ntp -f .ci/slimefun-core/pom.xml -DskipTests install
+
       - name: Compilar y ejecutar pruebas
         run: mvn -B -ntp clean verify
 
       - name: Verificar artefacto
         run: |
-          test -f target/DrakesSlimeMarket-1.0.0.jar
-          jar tf target/DrakesSlimeMarket-1.0.0.jar | grep -q '^cl/drakescraft/slimemarket/DrakesSlimeMarket.class$'
-          jar tf target/DrakesSlimeMarket-1.0.0.jar | grep -q '^plugin.yml$'
+          test -f target/DrakesSlimeMarket-1.1.0.jar
+          jar tf target/DrakesSlimeMarket-1.1.0.jar | grep -q '^cl/drakescraft/slimemarket/DrakesSlimeMarket.class$'
+          jar tf target/DrakesSlimeMarket-1.1.0.jar | grep -q '^plugin.yml$'
 
       - name: Publicar JAR
         if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v7
         with:
-          name: DrakesSlimeMarket-1.0.0
-          path: target/DrakesSlimeMarket-1.0.0.jar
+          name: DrakesSlimeMarket-1.1.0
+          path: target/DrakesSlimeMarket-1.1.0.jar
           if-no-files-found: error
