@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cl.drakescraft</groupId>
   <artifactId>DrakesSlimeMarket</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>DrakesSlimeMarket</name>
   <description>Mercado dinamico y curado de materiales Slimefun para DrakesCraft.</description>
 
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.github.drakescraft_labs</groupId>
       <artifactId>slimefun-core</artifactId>
-      <version>11.0-Drake-1.21.1-SNAPSHOT</version>
+      <version>11.0-Drake-1.21.11-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

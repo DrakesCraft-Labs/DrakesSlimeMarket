@@ -5,21 +5,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
+import io.github.thebusybiscuit.slimefun4.api.services.NativeAccelerationService;
 
 final class DynamicPricing {
     private final DrakesSlimeMarket plugin;
     private final MarketCatalog catalog;
     private final EconomySnapshotService snapshots;
+    private final NativeAccelerationService nativeAcceleration;
     private final Map<String, LongAdder> demand = new ConcurrentHashMap<>();
     private volatile Map<String, Double> prices = Map.of();
     private volatile EconomySnapshotService.EconomySnapshot lastSnapshot =
         new EconomySnapshotService.EconomySnapshot(0.0D, 0.0D, 0, 0);
     private volatile long lastRefreshEpochSecond;
 
-    DynamicPricing(DrakesSlimeMarket plugin, MarketCatalog catalog, EconomySnapshotService snapshots) {
+    DynamicPricing(
+        DrakesSlimeMarket plugin,
+        MarketCatalog catalog,
+        EconomySnapshotService snapshots,
+        NativeAccelerationService nativeAcceleration
+    ) {
         this.plugin = plugin;
         this.catalog = catalog;
         this.snapshots = snapshots;
+        this.nativeAcceleration = nativeAcceleration;
     }
 
     /** Publica precios inmutables para que cada menu vea una ventana economica consistente. */
@@ -33,17 +41,22 @@ final class DynamicPricing {
             final LongAdder counter = demand.remove(entry.id());
             final long itemDemand = counter == null ? 0L : counter.sum();
             final double pulse = PricingEngine.pulse(entry.id(), window, plugin.getConfig().getDouble("pricing.pulse-percent", 3.0D));
-            nextPrices.put(entry.id(), PricingEngine.calculate(
-                entry.basePrice(),
-                itemDemand,
-                snapshot.totalWealth(),
-                plugin.getConfig().getDouble("pricing.reference-wealth", 100_000_000.0D),
-                plugin.getConfig().getDouble("pricing.minimum-factor", 0.85D),
-                plugin.getConfig().getDouble("pricing.maximum-factor", 1.85D),
-                plugin.getConfig().getDouble("pricing.demand-step", 0.02D),
-                plugin.getConfig().getDouble("pricing.maximum-demand-factor", 1.45D),
-                pulse
-            ));
+            final double referenceWealth = plugin.getConfig().getDouble("pricing.reference-wealth", 100_000_000.0D);
+            final double minimumFactor = plugin.getConfig().getDouble("pricing.minimum-factor", 0.85D);
+            final double maximumFactor = plugin.getConfig().getDouble("pricing.maximum-factor", 1.85D);
+            final double demandStep = plugin.getConfig().getDouble("pricing.demand-step", 0.02D);
+            final double maximumDemandFactor =
+                plugin.getConfig().getDouble("pricing.maximum-demand-factor", 1.45D);
+            final double price = nativeAcceleration != null
+                ? nativeAcceleration.calculateMarketPrice(
+                    entry.basePrice(), itemDemand, snapshot.totalWealth(), referenceWealth,
+                    minimumFactor, maximumFactor, demandStep, maximumDemandFactor, pulse
+                )
+                : PricingEngine.calculate(
+                    entry.basePrice(), itemDemand, snapshot.totalWealth(), referenceWealth,
+                    minimumFactor, maximumFactor, demandStep, maximumDemandFactor, pulse
+                );
+            nextPrices.put(entry.id(), price);
         }
 
         prices = Map.copyOf(nextPrices);

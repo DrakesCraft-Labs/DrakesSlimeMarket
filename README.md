@@ -31,13 +31,12 @@
 
 ---
 
-## ⚡ Integración prevista con Slimefun-Rust
+## ⚡ Integración con Slimefun-Rust
 
-El mercado forma parte del catálogo objetivo de `Slimefun-Rust`. La integración
-FFM todavía no está activa: el plugin calcula y publica precios mediante Java.
-Cuando el bridge entre en shadow mode, Rust podrá calcular índices sobre
-snapshots inmutables; Vault, sBank y las transacciones Bukkit seguirán siendo
-autoritativos en Java.
+El mercado consume el servicio nativo publicado por Slimefun4-Drake y delega el
+cálculo determinista de precios a `libslimefun_ffi.so`. Si el ABI no está
+disponible, usa automáticamente la implementación Java equivalente. Vault,
+sBank y las transacciones Bukkit siempre permanecen autoritativos en Java.
 
 ---
 

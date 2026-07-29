@@ -5,6 +5,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import io.github.thebusybiscuit.slimefun4.api.services.NativeAccelerationService;
 
 public final class DrakesSlimeMarket extends JavaPlugin {
 
@@ -25,7 +26,16 @@ public final class DrakesSlimeMarket extends JavaPlugin {
 
         final Economy economy = provider.getProvider();
         catalog = new MarketCatalog(this);
-        pricing = new DynamicPricing(this, catalog, new EconomySnapshotService(this, economy));
+        final RegisteredServiceProvider<NativeAccelerationService> nativeProvider =
+            getServer().getServicesManager().getRegistration(NativeAccelerationService.class);
+        final NativeAccelerationService nativeAcceleration =
+            nativeProvider == null ? null : nativeProvider.getProvider();
+        pricing = new DynamicPricing(
+            this,
+            catalog,
+            new EconomySnapshotService(this, economy),
+            nativeAcceleration
+        );
         auditLogger = new MarketAuditLogger(this);
         final MarketMenu menu = new MarketMenu(this, economy, catalog, pricing, auditLogger);
         final PluginCommand command = getCommand("sfmercado");
@@ -40,7 +50,8 @@ public final class DrakesSlimeMarket extends JavaPlugin {
         getServer().getPluginManager().registerEvents(menu, this);
 
         scheduleRefresh();
-        getLogger().info("Mercado cargado; el catalogo se construira desde el registro real de Slimefun.");
+        getLogger().info("Mercado cargado; Slimefun-Rust: "
+            + (nativeAcceleration != null && nativeAcceleration.isAvailable() ? "ACTIVO" : "fallback Java"));
     }
 
     @Override
