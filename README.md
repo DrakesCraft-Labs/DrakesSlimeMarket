@@ -19,15 +19,44 @@
 
 ## 🪙 ¿Qué es DrakesSlimeMarket?
 
-`DrakesSlimeMarket` es el plugin de tienda y mercado dinámico para DrakesCraft. Indexa automáticamente todos los materiales, lingotes, polvos y productos de Slimefun4 y sus 44 Addons para ofrecer compra/venta en tiempo real con fluctuación de precios según la oferta y demanda del servidor.
+`DrakesSlimeMarket` es el mercado curado de Slimefun para DrakesCraft. Descubre
+los items registrados por el core y sus addons, pero solo publica ofertas que
+superan las políticas de seguridad, complejidad y balance. Detectar un addon no
+significa vender todo su contenido.
 
 ---
 
 ## 🧰 Funcionalidades Destacadas
 
-- 📈 **Mercado Dinámico de Slimefun**: Ajusta los precios de compra y venta según la cantidad de materiales vendidos por los jugadores.
-- 🏪 **Integración con Tienda Web & Tebex**: Conexión bidireccional entre la tienda del juego (`/tienda` o `/sfmarket`) y el portal web de DrakesCraft.
-- 🛡️ **Prevención de Inflación & Dupes**: Auditoría en tiempo real de transacciones para evitar compras masivas por desincronización de lag.
+- **Catalogo dinamico y curado**: descubre items Slimefun y materiales vanilla
+  permitidos, aplica overrides y los agrupa por familias configurables.
+- **Complejidad de receta**: excluye multibloques, endgame, items peligrosos o
+  recetas que superan los limites de profundidad/coste configurados.
+- **Rotacion por categoria**: limita ofertas visibles por familia y evita menus
+  con cientos de paginas o items repetidos.
+- **Precio dinamico**: combina precio base, complejidad, circulacion observada y
+  compras recientes con limites minimos/maximos.
+- **GUI aislada por jugador**: categorias, paginas y ofertas no comparten un
+  inventario mutable entre usuarios.
+- **Transaccion autoritativa**: Vault valida saldo y retiro antes de entregar;
+  si el inventario no admite el item, la compra no se completa parcialmente.
+- **Auditoria asincrona**: cada compra queda registrada sin bloquear el hilo
+  principal y sin incluir secretos.
+
+La web y Tebex no forman parte del runtime de este plugin. Odysseia maneja las
+compras comerciales y `drakescraft-web` publica el storefront; este mercado es
+exclusivamente la economia interna de materiales del servidor.
+
+## Politica de seguridad
+
+El catalogo falla cerrado. Las listas negras, familias permitidas, overrides y
+reglas de receta tienen prioridad sobre el descubrimiento automatico. Supreme,
+Infinity, armas, armaduras, recursos radiactivos, generadores endgame y otros
+items de alto impacto deben permanecer excluidos salvo auditoria explicita.
+
+Los tests verifican rotacion, politica de materiales, complejidad de recetas y
+calculo de precios. El comando operativo es `/sfmercado`; `reload` y `stats`
+requieren permiso administrativo.
 
 ---
 
