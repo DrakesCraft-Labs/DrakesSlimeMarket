@@ -95,3 +95,13 @@ Ubica el archivo compilado `DrakesSlimeMarket-1.0.jar` en la carpeta `plugins/` 
 **DrakesCraft Labs** · Mantenido por [**JackStar6677-1**](https://github.com/JackStar6677-1)
 
 </div>
+
+## ⚖️ Upstream Attribution & License / Licencia y Créditos
+
+- **Original Project / Upstream**: Slimefun4 Community Addon.
+- **Port & Maintenance**: DrakesCraft Labs team (Compatibility for Paper / Purpur 1.21.11).
+- **License**: GPL-3.0 / MIT.
+- **Source Code**: [GitHub Repository](https://github.com/DrakesCraft-Labs/DrakesSlimeMarket)
+- **Support & Issues**: [GitHub Issues](https://github.com/DrakesCraft-Labs/DrakesSlimeMarket/issues) | [Discord](https://discord.gg/rR7FbfCt9Y)
+
+*This project is an open-source derivative work maintained by DrakesCraft Labs under the terms of its original license. All original assets and concepts belong to their respective creators.*
