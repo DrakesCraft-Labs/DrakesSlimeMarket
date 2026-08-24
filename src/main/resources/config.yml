@@ -150,6 +150,14 @@ pricing:
   demand-step: 0.02
   maximum-demand-factor: 1.45
   pulse-percent: 3.0
+  circulation:
+    # Cuentas tecnicas que no representan riqueza de jugadores.
+    excluded-usernames: []
+  general-market:
+    # UltimateShop consume estos multiplicadores mediante PlaceholderAPI.
+    sell-elasticity: 0.55
+    minimum-sell-factor: 0.90
+    maximum-sell-factor: 1.45
 
 purchase-cooldown-seconds: 2
 audit:

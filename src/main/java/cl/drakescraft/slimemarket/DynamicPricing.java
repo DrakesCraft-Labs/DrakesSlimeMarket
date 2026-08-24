@@ -15,7 +15,7 @@ final class DynamicPricing {
     private final Map<String, LongAdder> demand = new ConcurrentHashMap<>();
     private volatile Map<String, Double> prices = Map.of();
     private volatile EconomySnapshotService.EconomySnapshot lastSnapshot =
-        new EconomySnapshotService.EconomySnapshot(0.0D, 0.0D, 0, 0);
+        new EconomySnapshotService.EconomySnapshot(0.0D, 0.0D, 0, 0, false);
     private volatile long lastRefreshEpochSecond;
 
     DynamicPricing(
@@ -75,9 +75,21 @@ final class DynamicPricing {
     }
 
     MarketStats stats() {
-        return new MarketStats(prices.size(), lastSnapshot.totalWealth(), lastSnapshot.bankTotal(), lastRefreshEpochSecond);
+        final double minimumFactor = plugin.getConfig().getDouble("pricing.minimum-factor", 0.85D);
+        final double maximumFactor = plugin.getConfig().getDouble("pricing.maximum-factor", 1.85D);
+        final double buyFactor = PricingEngine.wealthFactor(lastSnapshot.totalWealth(),
+            plugin.getConfig().getDouble("pricing.reference-wealth", 100_000_000.0D), minimumFactor, maximumFactor);
+        final double sellFactor = PricingEngine.sellFactor(buyFactor,
+            plugin.getConfig().getDouble("pricing.general-market.sell-elasticity", 0.55D),
+            plugin.getConfig().getDouble("pricing.general-market.minimum-sell-factor", 0.90D),
+            plugin.getConfig().getDouble("pricing.general-market.maximum-sell-factor", 1.45D));
+        return new MarketStats(prices.size(), lastSnapshot.totalWealth(), lastSnapshot.walletTotal(),
+            lastSnapshot.bankTotal(), lastSnapshot.walletAccounts(), lastSnapshot.bankAccounts(),
+            lastSnapshot.bankSnapshotComplete(), buyFactor, sellFactor, lastRefreshEpochSecond);
     }
 
-    record MarketStats(int pricedItems, double totalWealth, double bankWealth, long refreshedAt) {
+    record MarketStats(int pricedItems, double totalWealth, double walletWealth, double bankWealth,
+                       int walletAccounts, int bankAccounts, boolean bankSnapshotComplete,
+                       double buyFactor, double sellFactor, long refreshedAt) {
     }
 }

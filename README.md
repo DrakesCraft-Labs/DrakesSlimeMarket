@@ -46,6 +46,11 @@ significa vender todo su contenido.
   con cientos de paginas o items repetidos.
 - **Precio dinamico**: combina precio base, complejidad, circulacion observada y
   compras recientes con limites minimos/maximos.
+- **Masa monetaria completa**: suma las wallets offline de Vault/Essentials y
+  todas las cuentas persistidas de sBank; mover dinero entre ambos no lo duplica.
+- **Indice compartido**: publica `%drakesmarket_buy_factor%` y
+  `%drakesmarket_sell_factor%` para que UltimateShop siga la misma ventana de
+  30 minutos. Las ventas usan menor elasticidad para conservar el sumidero.
 - **GUI aislada por jugador**: categorias, paginas y ofertas no comparten un
   inventario mutable entre usuarios.
 - **Transaccion autoritativa**: Vault valida saldo y retiro antes de entregar;
@@ -67,6 +72,22 @@ items de alto impacto deben permanecer excluidos salvo auditoria explicita.
 Los tests verifican rotacion, politica de materiales, complejidad de recetas y
 calculo de precios. El comando operativo es `/sfmercado`; `reload` y `stats`
 requieren permiso administrativo.
+
+### Integracion con UltimateShop
+
+UltimateShop 4.2 admite PlaceholderAPI y expresiones en `amount`. Con el
+servidor detenido o preparando un reinicio, aplica el transformador idempotente
+sobre copias verificadas de `plugins/UltimateShop/shops/*.yml`:
+
+```bash
+python3 tools/apply_ultimateshop_index.py /ruta/a/shops/*.yml
+python3 tools/apply_ultimateshop_index.py --check /ruta/a/shops/*.yml
+```
+
+El script solo cambia montos numericos dentro de `buy-prices` y `sell-prices`,
+y conserva intactas las cantidades de producto. Nunca requiere recargar
+UltimateShop en vivo; plugin y configuraciones deben activarse juntos al
+reiniciar.
 
 ---
 

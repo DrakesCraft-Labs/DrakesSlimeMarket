@@ -32,4 +32,18 @@ class PricingEngineTest {
         assertEquals(first, second);
         assertTrue(first >= 0.97D && first <= 1.03D);
     }
+
+    @Test
+    void globalFactorsStayBoundedAndSellMovesMoreSlowly() {
+        final double buy = PricingEngine.wealthFactor(500_000_000.0D, 100_000_000.0D, 0.85D, 1.85D);
+        final double sell = PricingEngine.sellFactor(buy, 0.55D, 0.90D, 1.45D);
+
+        assertTrue(buy > 1.0D && buy <= 1.85D);
+        assertTrue(sell > 1.0D && sell < buy);
+    }
+
+    @Test
+    void invalidWealthCannotEscapeConfiguredFloor() {
+        assertEquals(0.90D, PricingEngine.wealthFactor(Double.NaN, 100_000_000.0D, 0.85D, 1.85D));
+    }
 }

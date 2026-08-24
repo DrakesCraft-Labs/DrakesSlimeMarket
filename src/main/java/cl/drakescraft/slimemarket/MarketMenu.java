@@ -287,6 +287,8 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
             ChatColor.GRAY + "Materiales: " + ChatColor.WHITE + itemCount,
             ChatColor.GRAY + "Circulacion observada: " + ChatColor.WHITE + economy.format(stats.totalWealth()),
             ChatColor.GRAY + "Depositos sBank: " + ChatColor.WHITE + economy.format(stats.bankWealth()),
+            ChatColor.GRAY + "Indice compra/venta: " + ChatColor.WHITE
+                + String.format(Locale.ROOT, "%.3f / %.3f", stats.buyFactor(), stats.sellFactor()),
             ChatColor.GRAY + "Ventana de precios: " + ChatColor.WHITE + refresh,
             ChatColor.DARK_GRAY + "Los precios se recalculan cada 30 minutos."
         ));
@@ -297,6 +299,10 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
         sender.sendMessage(ChatColor.GOLD + "DrakesSlimeMarket" + ChatColor.GRAY + " | ofertas: " + stats.pricedItems());
         sender.sendMessage(ChatColor.GRAY + "Circulacion observada: " + economy.format(stats.totalWealth())
             + " | sBank: " + economy.format(stats.bankWealth()));
+        sender.sendMessage(ChatColor.GRAY + "Cuentas wallet/banco: " + stats.walletAccounts() + "/" + stats.bankAccounts()
+            + " | banco completo: " + stats.bankSnapshotComplete());
+        sender.sendMessage(ChatColor.GRAY + "Indice compra/venta: "
+            + String.format(Locale.ROOT, "%.4f / %.4f", stats.buyFactor(), stats.sellFactor()));
     }
 
     private void fail(Player player, String message) {

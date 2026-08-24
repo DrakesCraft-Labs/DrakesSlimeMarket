@@ -36,6 +36,11 @@ public final class DrakesSlimeMarket extends JavaPlugin {
             new EconomySnapshotService(this, economy),
             nativeAcceleration
         );
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new MarketPlaceholderExpansion(this, pricing).register();
+        } else {
+            getLogger().warning("PlaceholderAPI no esta activo; UltimateShop no recibira el indice global.");
+        }
         auditLogger = new MarketAuditLogger(this);
         final MarketMenu menu = new MarketMenu(this, economy, catalog, pricing, auditLogger);
         final PluginCommand command = getCommand("sfmercado");
