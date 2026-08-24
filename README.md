@@ -89,6 +89,17 @@ y conserva intactas las cantidades de producto. Nunca requiere recargar
 UltimateShop en vivo; plugin y configuraciones deben activarse juntos al
 reiniciar.
 
+Para impedir que la inflación vuelva prohibitivos los materiales básicos, el
+segundo transformador fija topes finales por unidad: `2` Dragmas de compra y
+`0.25` de venta para flores, semillas/cultivos, lana, madera y construcción
+común. Excluye cobre reversible, componentes funcionales y recursos raros para
+no crear arbitraje de crafteo:
+
+```bash
+python3 tools/enforce_essential_caps.py /ruta/a/shops/{flowers,farming,wools,blocks,blocks_121,logs,bambu_cerezo,copper_tuff}.yml
+python3 tools/enforce_essential_caps.py --check /ruta/a/shops/*.yml
+```
+
 ---
 
 ## ⚡ Integración con Slimefun-Rust
