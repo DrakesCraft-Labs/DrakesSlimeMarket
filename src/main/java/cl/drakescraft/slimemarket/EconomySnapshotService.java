@@ -32,8 +32,16 @@ final class EconomySnapshotService {
 
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             final String name = player.getName();
-            if ((!player.hasPlayedBefore() && !player.isOnline())
-                || (name != null && excludedNames.contains(name.toLowerCase()))) {
+            final boolean excluded = name != null && excludedNames.contains(name.toLowerCase());
+            final boolean hasEconomyAccount;
+            try {
+                hasEconomyAccount = economy.hasAccount(player);
+            } catch (RuntimeException exception) {
+                plugin.getLogger().warning("No se pudo comprobar la wallet de "
+                    + (name == null ? player.getUniqueId() : name) + "; se excluye del indice.");
+                continue;
+            }
+            if (!shouldIncludeWallet(player.hasPlayedBefore(), player.isOnline(), excluded, hasEconomyAccount)) {
                 continue;
             }
             final double balance = economy.getBalance(player);
@@ -46,6 +54,14 @@ final class EconomySnapshotService {
         final BankSnapshot bankSnapshot = readSBank();
         return new EconomySnapshot(walletTotal, bankSnapshot.total(), walletAccounts, bankSnapshot.accounts(),
             bankSnapshot.complete());
+    }
+
+    /**
+     * Evita que un proveedor Vault materialice saldos por defecto para perfiles Bukkit
+     * históricos que no existen en la economía real.
+     */
+    static boolean shouldIncludeWallet(boolean hasPlayedBefore, boolean online, boolean excluded, boolean hasAccount) {
+        return !excluded && hasAccount && (hasPlayedBefore || online);
     }
 
     private BankSnapshot readSBank() {
