@@ -6,10 +6,13 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 final class EconomySnapshotService {
     private final DrakesSlimeMarket plugin;
@@ -30,7 +33,8 @@ final class EconomySnapshotService {
             .map(String::toLowerCase)
             .toList());
 
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+        for (UUID playerId : walletAccountIds()) {
+            final OfflinePlayer player = Bukkit.getOfflinePlayer(playerId);
             final String name = player.getName();
             final boolean excluded = name != null && excludedNames.contains(name.toLowerCase());
             final boolean hasEconomyAccount;
@@ -62,6 +66,48 @@ final class EconomySnapshotService {
      */
     static boolean shouldIncludeWallet(boolean hasPlayedBefore, boolean online, boolean excluded, boolean hasAccount) {
         return !excluded && hasAccount && (hasPlayedBefore || online);
+    }
+
+    /**
+     * Devuelve solo cuentas que Essentials reconoce en su almacenamiento persistente.
+     *
+     * Bukkit conserva perfiles históricos que no necesariamente son wallets reales y el proveedor
+     * Vault puede devolverles un saldo por defecto. Si la API de Essentials no estuviera disponible,
+     * el fallback deliberadamente conservador solo mide jugadores conectados para no inflar precios.
+     */
+    private Set<UUID> walletAccountIds() {
+        final Plugin essentials = Bukkit.getPluginManager().getPlugin("Essentials");
+        if (essentials != null && essentials.isEnabled()) {
+            try {
+                final Object userMap = essentials.getClass().getMethod("getUserMap").invoke(essentials);
+                final Object users = userMap.getClass().getMethod("getAllUniqueUsers").invoke(userMap);
+                if (users instanceof Collection<?> ids) {
+                    final Set<UUID> authoritativeIds = new HashSet<>();
+                    for (Object id : ids) {
+                        if (id instanceof UUID uuid) {
+                            authoritativeIds.add(uuid);
+                        }
+                    }
+                    return chooseWalletAccountIds(Optional.of(authoritativeIds), Bukkit.getOnlinePlayers());
+                }
+            } catch (ReflectiveOperationException | RuntimeException exception) {
+                warnOnce("Essentials no expuso su indice de usuarios; el indice economico solo considerara jugadores conectados.");
+            }
+        }
+        return chooseWalletAccountIds(Optional.empty(), Bukkit.getOnlinePlayers());
+    }
+
+    /** Selecciona el inventario persistente de Essentials o, sin él, el fallback sin wallets offline. */
+    static Set<UUID> chooseWalletAccountIds(Optional<Set<UUID>> authoritativeIds,
+                                             Collection<? extends OfflinePlayer> onlinePlayers) {
+        if (authoritativeIds.isPresent()) {
+            return Set.copyOf(authoritativeIds.get());
+        }
+        final Set<UUID> onlineIds = new HashSet<>();
+        for (OfflinePlayer player : onlinePlayers) {
+            onlineIds.add(player.getUniqueId());
+        }
+        return Set.copyOf(onlineIds);
     }
 
     private BankSnapshot readSBank() {
