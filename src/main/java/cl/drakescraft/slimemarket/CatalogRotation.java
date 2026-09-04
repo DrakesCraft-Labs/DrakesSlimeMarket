@@ -15,18 +15,21 @@ final class CatalogRotation {
 
     CatalogRotation(FileConfiguration config) {
         enabled = config.getBoolean("catalog.rotation.enabled", true);
-        refreshSeconds = Math.max(60L, config.getLong("catalog.rotation.refresh-seconds", 1800L));
-        offersPerCategory = Math.clamp(config.getInt("catalog.rotation.offers-per-category", 36), 9, 45);
+        refreshSeconds = Math.max(60L, config.getLong("catalog.rotation.refresh-seconds", 1200L));
+        offersPerCategory = Math.clamp(config.getInt("catalog.rotation.offers-per-category", 14), 7, 45);
     }
 
     List<CatalogEntry> select(String categoryId, List<CatalogEntry> candidates) {
-        if (!enabled || candidates.size() <= offersPerCategory) {
+        if (!enabled || candidates.isEmpty()) {
             return candidates;
         }
         long window = Instant.now().getEpochSecond() / refreshSeconds;
         List<CatalogEntry> rotated = new ArrayList<>(candidates);
         rotated.sort(Comparator.<CatalogEntry>comparingLong(entry -> score(categoryId, entry.id(), window))
             .thenComparing(CatalogEntry::id));
+        if (candidates.size() <= offersPerCategory) {
+            return List.copyOf(rotated);
+        }
         return List.copyOf(rotated.subList(0, offersPerCategory));
     }
 

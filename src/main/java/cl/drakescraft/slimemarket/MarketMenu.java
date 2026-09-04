@@ -87,6 +87,10 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
             sender.sendMessage("Solo un jugador puede abrir el mercado.");
             return true;
         }
+        if (!isWorldAllowed(player.getWorld().getName())) {
+            player.sendMessage(ChatColor.RED + "El Mercado de Slimefun solo está disponible en las modalidades de Survival, SkyBlock y OneBlock.");
+            return true;
+        }
         if (catalog.entries().isEmpty()) {
             plugin.refreshMarket();
         }
@@ -327,6 +331,27 @@ final class MarketMenu implements CommandExecutor, TabCompleter, Listener {
 
     private static ItemStack[] cloneContents(ItemStack[] contents) {
         return Arrays.stream(contents).map(item -> item == null ? null : item.clone()).toArray(ItemStack[]::new);
+    }
+
+    private boolean isWorldAllowed(String worldName) {
+        if (worldName == null) {
+            return false;
+        }
+        final List<String> allowedWorlds = plugin.getConfig().getStringList("allowed-worlds");
+        final String lower = worldName.toLowerCase(Locale.ROOT);
+        if (allowedWorlds == null || allowedWorlds.isEmpty()) {
+            return lower.startsWith("world") || lower.startsWith("bskyblock") || lower.startsWith("oneblock");
+        }
+        for (String pattern : allowedWorlds) {
+            String pLower = pattern.toLowerCase(Locale.ROOT);
+            if (pLower.endsWith("*")) {
+                pLower = pLower.substring(0, pLower.length() - 1);
+            }
+            if (lower.startsWith(pLower) || lower.equals(pLower)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static ItemStack named(Material material, String name, List<String> lore) {

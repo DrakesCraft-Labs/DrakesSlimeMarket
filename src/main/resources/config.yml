@@ -4,15 +4,15 @@ catalog:
   auto-discovery: true
   rotation:
     enabled: true
-    refresh-seconds: 1800
-    offers-per-category: 36
+    refresh-seconds: 1200
+    offers-per-category: 14
   recipe-safety:
     enabled: true
     maximum-input-slots: 9
     maximum-slimefun-inputs: 2
     exceptions: [NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
-  # Exact first-tier Networks nodes. They still pass hard item/material safety gates.
-  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
+  # Exact first-tier Networks nodes and safe basic Slimefun materials.
+  allowed-ids: [IRON_DUST, GOLD_DUST, COPPER_DUST, TIN_DUST, SILVER_DUST, LEAD_DUST, ALUMINUM_DUST, ALUMINIUM_DUST, ZINC_DUST, MAGNESIUM_DUST, SIFTED_ORE, PULVERIZED_ORE, SULFUR, SALT, SILICON, TIN_INGOT, SILVER_INGOT, LEAD_INGOT, ALUMINUM_INGOT, ALUMINIUM_INGOT, ZINC_INGOT, MAGNESIUM_INGOT, BRONZE_INGOT, STEEL_INGOT, DURALUMIN_INGOT, BILLON_INGOT, SOLDER_INGOT, DAMASCUS_STEEL_INGOT, REDSTONE_ALLOY, NTW_SYNTHETIC_EMERALD_SHARD, NTW_OPTIC_GLASS, NTW_OPTIC_CABLE, NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
   machine-exceptions: [NTW_GRABBER, NTW_PUSHER, NTW_VANILLA_GRABBER, NTW_VANILLA_PUSHER, NTW_VACUUM, NTW_TRASH]
   # Every loaded addon is inspected. It must pass the hard item and material gates; named machine exceptions are audited separately.
   allowed-addons: ['*']
@@ -85,6 +85,20 @@ catalog:
       lore: ['&7Tuff, cobre decorativo y pale oak.', '&8Curado para construcción.']
       id-fragments: [VANILLA_121_]
   entries:
+    BRONZE_INGOT: {base-price: 750.0}
+    REDSTONE_ALLOY: {base-price: 800.0}
+    TIN_INGOT: {base-price: 350.0}
+    SILVER_INGOT: {base-price: 450.0}
+    LEAD_INGOT: {base-price: 400.0}
+    ALUMINUM_INGOT: {base-price: 500.0}
+    ALUMINIUM_INGOT: {base-price: 500.0}
+    ZINC_INGOT: {base-price: 380.0}
+    MAGNESIUM_INGOT: {base-price: 480.0}
+    SIFTED_ORE: {base-price: 40.0}
+    PULVERIZED_ORE: {base-price: 55.0}
+    SULFUR: {base-price: 65.0}
+    SALT: {base-price: 40.0}
+    SILICON: {base-price: 150.0}
     STEEL_INGOT: {base-price: 850.0}
     DURALUMIN_INGOT: {base-price: 1200.0}
     BILLON_INGOT: {base-price: 1500.0}
@@ -105,19 +119,27 @@ vanilla-catalog:
   categories:
     recursos:
       base-price: 4.0
-      materials: [COAL, CHARCOAL, RAW_IRON, RAW_GOLD, RAW_COPPER, IRON_INGOT, GOLD_INGOT, COPPER_INGOT, REDSTONE, LAPIS_LAZULI, QUARTZ, AMETHYST_SHARD, CLAY_BALL, FLINT, BONE, STRING, LEATHER, FEATHER, SLIME_BALL, HONEYCOMB, GUNPOWDER]
+      materials: [COAL, CHARCOAL, RAW_IRON, RAW_GOLD, RAW_COPPER, IRON_INGOT, GOLD_INGOT, COPPER_INGOT, REDSTONE, LAPIS_LAZULI, QUARTZ, AMETHYST_SHARD, CLAY_BALL, FLINT, BONE, STRING, LEATHER, FEATHER, SLIME_BALL, HONEYCOMB, GUNPOWDER, SHROOMLIGHT]
     bloques:
       base-price: 0.45
       materials: [DIRT, COBBLESTONE, STONE, SAND, GRAVEL, ANDESITE, DIORITE, GRANITE, DEEPSLATE, COBBLED_DEEPSLATE, STONE_BRICKS, BRICKS, CALCITE, MOSS_BLOCK, QUARTZ_BLOCK, SMOOTH_QUARTZ, NETHERRACK, SOUL_SAND, END_STONE]
     decoracion:
       base-price: 0.75
-      materials: [GLASS, WHITE_STAINED_GLASS, TERRACOTTA, WHITE_TERRACOTTA, GLOWSTONE, SEA_LANTERN, AMETHYST_BLOCK, CHISELED_STONE_BRICKS, POLISHED_DEEPSLATE, SMOOTH_BASALT, WHITE_CONCRETE, BLACK_CONCRETE, PURPLE_CONCRETE, MAGENTA_CONCRETE]
+      materials: [GLASS, WHITE_STAINED_GLASS, TERRACOTTA, WHITE_TERRACOTTA, GLOWSTONE, SEA_LANTERN, SHROOMLIGHT, AMETHYST_BLOCK, CHISELED_STONE_BRICKS, POLISHED_DEEPSLATE, SMOOTH_BASALT, WHITE_CONCRETE, BLACK_CONCRETE, PURPLE_CONCRETE, MAGENTA_CONCRETE]
     maderas:
       base-price: 0.50
       materials: [OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG, MANGROVE_LOG, CHERRY_LOG, OAK_PLANKS, SPRUCE_PLANKS, BIRCH_PLANKS, JUNGLE_PLANKS, ACACIA_PLANKS, DARK_OAK_PLANKS, MANGROVE_PLANKS, CHERRY_PLANKS]
     '121':
       base-price: 0.70
       materials: [TUFF, POLISHED_TUFF, TUFF_BRICKS, CHISELED_TUFF, CUT_COPPER, CHISELED_COPPER, COPPER_GRATE, PALE_OAK_LOG, PALE_OAK_PLANKS]
+
+# Modalidades autorizadas para el mercado de Slimefun (/sfmercado)
+allowed-worlds:
+  - 'world'
+  - 'world_nether'
+  - 'world_the_end'
+  - 'bskyblock'
+  - 'oneblock'
 
 base-prices:
   DUST: 45.0
