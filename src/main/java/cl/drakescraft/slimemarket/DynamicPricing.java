@@ -74,9 +74,30 @@ final class DynamicPricing {
         prices = Map.copyOf(nextPrices);
         lastSnapshot = snapshot;
         lastRefreshEpochSecond = Instant.now().getEpochSecond();
-        plugin.getLogger().info("Precios publicados: circulacion observada "
-            + Math.round(snapshot.totalWealth()) + ", suavizada " + Math.round(smoothedWealth)
-            + ", " + nextPrices.size() + " ofertas.");
+        // Transparencia del scan (pedido de Jack): registra QUE se recolecto y QUE se
+        // decidio, para poder auditar cada ajuste de precios sin adivinar.
+        final double refFactor = PricingEngine.wealthFactor(smoothedWealth,
+            plugin.getConfig().getDouble("pricing.reference-wealth", 100_000_000.0D),
+            minimumFactorGlobal(), maximumFactorGlobal());
+        final double refSell = PricingEngine.sellFactor(refFactor,
+            plugin.getConfig().getDouble("pricing.general-market.sell-elasticity", 0.55D),
+            plugin.getConfig().getDouble("pricing.general-market.minimum-sell-factor", 0.95D),
+            plugin.getConfig().getDouble("pricing.general-market.maximum-sell-factor", 1.45D));
+        plugin.getLogger().info(String.format(
+            "[SCAN mercado] recolectado: wallets=%s (%d ctas) + banco=%s (%d ctas) = %s circulante"
+            + " | suavizado=%s (alpha %.2f) | DECISION: factor compra x%.3f, venta x%.3f | %d ofertas",
+            Math.round(snapshot.walletTotal()), snapshot.walletAccounts(),
+            Math.round(snapshot.bankTotal()), snapshot.bankAccounts(),
+            Math.round(snapshot.totalWealth()), Math.round(smoothedWealth), alpha,
+            refFactor, refSell, nextPrices.size()));
+    }
+
+    private double minimumFactorGlobal() {
+        return plugin.getConfig().getDouble("pricing.minimum-factor", 0.85D);
+    }
+
+    private double maximumFactorGlobal() {
+        return plugin.getConfig().getDouble("pricing.maximum-factor", 1.85D);
     }
 
     double unitPrice(CatalogEntry entry) {
