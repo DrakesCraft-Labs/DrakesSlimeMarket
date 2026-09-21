@@ -13,6 +13,11 @@ final class DynamicPricing {
     private final EconomySnapshotService snapshots;
     private final NativeAccelerationService nativeAcceleration;
     private final Map<String, LongAdder> demand = new ConcurrentHashMap<>();
+    // Riqueza suavizada (EMA): el factor se movia a saltos porque usaba el snapshot
+    // puntual de cada refresco. Una venta grande o un jugador rico que entra dispara
+    // el precio de golpe -- el 'el bot me quita de repente' que reportan. La media
+    // movil hace que el indice se mueva gradual y predecible.
+    private double smoothedWealth = Double.NaN;
     private volatile Map<String, Double> prices = Map.of();
     private volatile EconomySnapshotService.EconomySnapshot lastSnapshot =
         new EconomySnapshotService.EconomySnapshot(0.0D, 0.0D, 0, 0, false);
@@ -35,6 +40,13 @@ final class DynamicPricing {
         final EconomySnapshotService.EconomySnapshot snapshot = snapshots.capture();
         final long refreshSeconds = Math.max(60L, plugin.getConfig().getLong("pricing.refresh-seconds", 1800L));
         final long window = Instant.now().getEpochSecond() / refreshSeconds;
+        // EMA: primera pasada = valor directo; luego mezcla configurable (por defecto 0.3,
+        // ~4 refrescos para converger). alpha alto = mas reactivo, bajo = mas estable.
+        final double alpha = Math.clamp(
+            plugin.getConfig().getDouble("pricing.wealth-smoothing-alpha", 0.30D), 0.05D, 1.0D);
+        smoothedWealth = Double.isNaN(smoothedWealth)
+            ? snapshot.totalWealth()
+            : alpha * snapshot.totalWealth() + (1.0D - alpha) * smoothedWealth;
         final Map<String, Double> nextPrices = new HashMap<>();
 
         for (CatalogEntry entry : catalog.entries()) {
@@ -49,11 +61,11 @@ final class DynamicPricing {
                 plugin.getConfig().getDouble("pricing.maximum-demand-factor", 1.45D);
             final double price = nativeAcceleration != null
                 ? nativeAcceleration.calculateMarketPrice(
-                    entry.basePrice(), itemDemand, snapshot.totalWealth(), referenceWealth,
+                    entry.basePrice(), itemDemand, smoothedWealth, referenceWealth,
                     minimumFactor, maximumFactor, demandStep, maximumDemandFactor, pulse
                 )
                 : PricingEngine.calculate(
-                    entry.basePrice(), itemDemand, snapshot.totalWealth(), referenceWealth,
+                    entry.basePrice(), itemDemand, smoothedWealth, referenceWealth,
                     minimumFactor, maximumFactor, demandStep, maximumDemandFactor, pulse
                 );
             nextPrices.put(entry.id(), price);
@@ -62,8 +74,9 @@ final class DynamicPricing {
         prices = Map.copyOf(nextPrices);
         lastSnapshot = snapshot;
         lastRefreshEpochSecond = Instant.now().getEpochSecond();
-        plugin.getLogger().info("Precios publicados con circulacion observada de "
-            + Math.round(snapshot.totalWealth()) + " y " + nextPrices.size() + " ofertas.");
+        plugin.getLogger().info("Precios publicados: circulacion observada "
+            + Math.round(snapshot.totalWealth()) + ", suavizada " + Math.round(smoothedWealth)
+            + ", " + nextPrices.size() + " ofertas.");
     }
 
     double unitPrice(CatalogEntry entry) {
@@ -77,7 +90,11 @@ final class DynamicPricing {
     MarketStats stats() {
         final double minimumFactor = plugin.getConfig().getDouble("pricing.minimum-factor", 0.85D);
         final double maximumFactor = plugin.getConfig().getDouble("pricing.maximum-factor", 1.85D);
-        final double buyFactor = PricingEngine.wealthFactor(lastSnapshot.totalWealth(),
+        // Usa la riqueza suavizada (la que de verdad fija los precios); si aun no hubo
+        // refresco, cae al snapshot para no mostrar NaN.
+        final double wealthForFactor = Double.isNaN(smoothedWealth)
+            ? lastSnapshot.totalWealth() : smoothedWealth;
+        final double buyFactor = PricingEngine.wealthFactor(wealthForFactor,
             plugin.getConfig().getDouble("pricing.reference-wealth", 100_000_000.0D), minimumFactor, maximumFactor);
         final double sellFactor = PricingEngine.sellFactor(buyFactor,
             plugin.getConfig().getDouble("pricing.general-market.sell-elasticity", 0.55D),
