@@ -17,7 +17,7 @@
   <repositories>
     <repository>
       <id>drakes</id>
-      <url>https://drakescraft-labs.github.io/maven-repo/</url>
+      <url>https://maven.drakescraft.cl/</url>
     </repository>
     <repository>
       <id>papermc</id>
